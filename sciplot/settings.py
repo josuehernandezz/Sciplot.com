@@ -37,6 +37,7 @@ DEBUG = os.getenv("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = [
     'sciplot.com',
+    'whale-app-oyqao.ondigitalocean.app',
     'goldfish-app-wkcqm.ondigitalocean.app'
 ]
 
