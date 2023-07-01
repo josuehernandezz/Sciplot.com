@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+
+<!-- ############################## Title ############################## -->
+{% block title %}Home{% endblock %}
+
+<!-- ############################## customStyles ############################## -->
+{% block customStyles%}
+<style>
+.home-images {
+    border: 1px solid var(--text-color);
+    display: block;
+    margin: auto;
+    width: 600px;
+    height: 400px;
+    border-radius: 10px;
+}
+</style>
+{% endblock %}
+
+<!-- ############################## customJS ############################## -->
+{% block customJS %}
+
+{% endblock %}
+
+
+<!-- ############################## headerbutton ############################## -->
+{% block headerbutton %}
+{% endblock %}
+
+
+<!-- ############################## column1 ############################## -->
+{% block column1 %}
+
+{% endblock %}
+
+
+<!-- ############################## column2 ############################## -->
+{% block column2 %}
+<h2 style="text-align: center;">
+    Home
+</h2>
+
+<p>
+    Welcome to Sciplot, the cutting-edge platform for data visualization and analysis. Seamlessly upload your text files and unlock a world of dynamic live plots, providing you with real-time insights into your data. With Sciplot, you have the power to explore, analyze, and interpret your data like never before.
+
+    Our intuitive interface and advanced visualization tools allow you to effortlessly delve into the intricate patterns and trends hidden within your data. Gain a deeper understanding of your research, make informed decisions, and communicate your findings effectively.
+</p>
+    <img class="home-images" src="{% static 'img/Absorbance & Photoluminesence.png' %}">
+<p>
+    Take advantage of our interactive features, enabling you to interact with your plots, zoom in on specific areas of interest, and customize the display to suit your needs. Dive into the details, adjust axes, and perform in-depth analysis to extract meaningful information.
+    
+    Once you've achieved the perfect visualization, Sciplot provides you with the option to download your plots in various formats, ensuring seamless integration with your reports, presentations, and publications.
+    
+    Experience the power of Sciplot today and unlock the true potential of your data. Join our community of scientists, researchers, and data enthusiasts who are revolutionizing the way they visualize and analyze data. Discover the possibilities with Sciplot and elevate your research to new heights.
+</p>
+
+{% endblock %}
+
+
+<!-- ############################## column3 ############################## -->
+{% block column3 %}
+
+{% endblock %}
+
+
+<!-- ############################## footer ############################## -->
+{% block footer %}
+
+{% endblock %}

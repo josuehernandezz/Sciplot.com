@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+
+<!-- ############################## Title ############################## -->
+{% block title %}Upload{% endblock %}
+
+
+<!-- ############################## customStyles ############################## -->
+{% block customStyles%}
+<style>
+
+#uploadForm {
+  margin-top: 25px;
+}
+</style>
+{% endblock %}
+
+
+<!-- ############################## customJS ############################## -->
+{% block customJS %}
+
+{% endblock %}
+
+
+<!-- ############################## headerbutton ############################## -->
+{% block headerbutton %}
+<a class="header-button" href="/">Home</a>
+{% endblock %}
+
+
+<!-- ############################## column1 ############################## -->
+{% block column1 %}
+
+{% endblock %}
+
+
+<!-- ############################## column2 ############################## -->
+{% block column2 %}
+<h2 style="text-align: center;">
+  Upload
+</h2>
+<h3 style="text-align: center;">
+  {% if plot_type == "/pxrd" %}
+    Powder XRD
+  {% elif plot_type == "/abspl" %}
+    Absorbance and Photoluminescence
+  {% endif %}
+</h3>
+
+<form id="uploadForm" enctype="multipart/form-data" method="POST">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Upload</button>
+</form>
+
+
+{% endblock %}
+
+
+<!-- ############################## column3 ############################## -->
+{% block column3 %}
+
+{% endblock %}
+
+
+<!-- ############################## footer ############################## -->
+{% block footer %}
+
+{% endblock %}
