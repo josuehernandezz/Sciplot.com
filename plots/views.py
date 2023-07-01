@@ -12,7 +12,6 @@ def update_title(request):
         # Update the title as desired
         print('success ' + new_title)
 
-
         form = FileUploadForm(request.POST, request.FILES)
         files = request.FILES.getlist('files')
         legend_labels = form.cleaned_data.get('legend_labels').split(',')
