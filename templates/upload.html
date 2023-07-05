@@ -14,27 +14,31 @@
 #uploadForm {
   margin-top: 25px;
 }
+
+/* Style the input elements */
+#uploadForm input {
+  /* Add your desired styles here */
+  width: 500px;
+}
+#uploadForm p {
+  text-align: center;
+}
+
 </style>
 {% endblock %}
 
-
 <!-- ############################## customJS ############################## -->
 {% block customJS %}
-
 {% endblock %}
-
 
 <!-- ############################## headerbutton ############################## -->
 {% block headerbutton %}
 <a class="header-button" href="/">Home</a>
 {% endblock %}
 
-
 <!-- ############################## column1 ############################## -->
 {% block column1 %}
-
 {% endblock %}
-
 
 <!-- ############################## column2 ############################## -->
 {% block column2 %}
@@ -52,20 +56,16 @@
 <form id="uploadForm" enctype="multipart/form-data" method="POST">
   {% csrf_token %}
   {{ form.as_p }}
-  <button type="submit">Upload</button>
+  <div style="display: flex; justify-content: center; align-items: center;">
+    <button class="btn" type="submit">Upload</button>
+  </div>
 </form>
-
-
 {% endblock %}
-
 
 <!-- ############################## column3 ############################## -->
 {% block column3 %}
-
 {% endblock %}
-
 
 <!-- ############################## footer ############################## -->
 {% block footer %}
-
 {% endblock %}
