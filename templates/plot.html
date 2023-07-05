@@ -114,28 +114,26 @@
 <!-- ############################## column2 ############################## -->
 {% block column2 %}
 <h2 style="text-align: center;">
-    Plot
+  {{ title }}
 </h2>
 
-<h2 id="ajax">Test</h2>
-
 <div class="figure-container">
-  <div class="graph-title-container">
+  <!-- <div class="graph-title-container">
     <input id="title-input" class="graph-title" type="text" value="{{ title }}">
-  </div>
+  </div> -->
   <div class="y-axis-graph-container">
-    <div class="y-axis-container">
+    <!-- <div class="y-axis-container">
       <input class="y-axis" type="text" value="{{ y_label }}">
-    </div>
+    </div> -->
     <div class="graph-container">
       <div class="graph">
         {{ div | safe }}
       </div>
     </div>
   </div>
-  <div class="x-axis-container">
+  <!-- <div class="x-axis-container">
     <input class="x-axis" type="text" value="{{ x_label }}">
-  </div>
+  </div> -->
 </div>
 {% endblock %}
 
@@ -152,51 +150,4 @@
 
 <!-- ############################## customJS ############################## -->
 {% block customJS %}
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<script>
-  $(document).ready(function() {
-  
-    // Function to get CSRF token from cookies
-    function getCSRFToken() {
-        var cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            var cookies = document.cookie.split(';');
-            for (var i = 0; i < cookies.length; i++) {
-                var cookie = cookies[i].trim();
-                if (cookie.substring(0, 'csrftoken='.length) === 'csrftoken=') {
-                    cookieValue = decodeURIComponent(cookie.substring('csrftoken='.length));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
-  
-    // Function to update the title
-    function updateTitle(title) {
-        var csrftoken = getCSRFToken();  // Get CSRF token
-        $.ajax({
-            url: '/update_title',  // URL for the update_title view
-            method: 'POST',
-            data: { title: title },
-            beforeSend: function(xhr) {
-                xhr.setRequestHeader('X-CSRFToken', csrftoken);  // Include CSRF token in request headers
-            },
-            success: function(response) {
-                setTimeout(function() {
-                    $('#ajax').text('Success');
-                }, 1000); // 1-second delay (1000 milliseconds)
-            }
-        });
-    }
-  
-    // Event listener for title input
-    $('#title-input').on('blur', function() {
-        var title = $(this).val();
-        updateTitle(title);  // Call the function to update the title
-    });
-  });
-</script>
-
 {% endblock %}
