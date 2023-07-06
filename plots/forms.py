@@ -1,65 +1,75 @@
 from django import forms
 from multiupload.fields import MultiFileField
 
-class FileUploadForm(forms.Form):
-    files = MultiFileField(min_num=1, max_num=10,
-                        label="Text Files")
+class AbsForm(forms.Form):
+    abs_files = MultiFileField(min_num=1, max_num=10,
+                        label="Abs Files")
     
-    legend_labels = forms.CharField(
+    abs_labels = forms.CharField(
                         widget=forms.TextInput(
-                            attrs={
-                                'class': 'legend-input',
-                                'placeholder': 'Label 1, Label 2, Label 3 ...'
-                                }),
-                        label="Legend Labels",
+                            attrs={'placeholder': 'Label 1, Label 2 ...'}),
+                        label="Abs Labels",
                         required=False
                         ) 
+
+    pl_files = MultiFileField(min_num=1, 
+                        max_num=10,
+                        label="PL Files",
+                        required=False
+                        )
+    
+    pl_labels = forms.CharField(
+                        widget=forms.TextInput(
+                            attrs={'placeholder': 'Label 1, Label 2 ...'}),
+                        label="PL Labels",
+                        required=False
+                        )
 
     title = forms.CharField(
                         widget=forms.TextInput(
                             attrs={
                                 'class': 'title-input',
-                                'placeholder': 'Absorbance & Photoluminescence'
+                                'placeholder': 'Abs & PL'
                                    }),
                         label='Figure Title',
                         required=False,
                         help_text=''
                         )
 
-class XrdFileUploadForm(forms.Form):
+class XrdForm(forms.Form):
     
-    cardFiles = MultiFileField(min_num=1, max_num=10,
-                        label="Card Files")
-    
-    files = MultiFileField(min_num=1, max_num=10,
-                        label="Text Files")
-    
-    cardfile_labels = forms.CharField(
-                    widget=forms.TextInput(attrs={'class': 'cardfile_labels-input'}),
-                    label="Card File Labels"
-                    ) 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        self.fields['cardFiles'] = MultiFileField(
+            min_num=1,
+            max_num=10,
+            label="Card Files"
+        )
+        
+        self.fields['cardfile_labels'] = forms.CharField(
+            widget=forms.TextInput(attrs={
+                'class': 'cardfile_labels-input',
+                'placeholder': 'Label 1, Label 2 ...'
+                }),
+            label="Card Labels",
+            required=False
+        )
+        
+        self.fields['files'] = MultiFileField(
+            label='Xrd Files',
+        )
 
-    cardfile_labels = forms.CharField(
+        self.fields['legend_labels'] = forms.CharField(
                         widget=forms.TextInput(
                             attrs={
-                                'class': 'cardfile_labels-input',
-                                'placeholder': 'Label 1, Label 2, Label 3 ...'
+                                'placeholder': 'Label 1, Label 2 ...'
                                 }),
-                        label="Card File Labels",
+                        label="Xrd Labels",
                         required=False
-                        ) 
-
-    legend_labels = forms.CharField(
-                        widget=forms.TextInput(
-                            attrs={
-                                'class': 'legend-input',
-                                'placeholder': 'Label 1, Label 2, Label 3 ...'
-                                }),
-                        label="Legend Labels",
-                        required=False
-                        ) 
-
-    title = forms.CharField(
+                        )
+        
+        self.fields['title'] = forms.CharField(
                         widget=forms.TextInput(
                             attrs={
                                 'class': 'title-input',
@@ -70,3 +80,4 @@ class XrdFileUploadForm(forms.Form):
                         help_text=''
                         )
 
+        self.order_fields(field_order=['cardFiles', 'cardfile_labels'])

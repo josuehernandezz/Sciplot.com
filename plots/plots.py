@@ -1,57 +1,58 @@
 from bokeh.plotting import figure, curdoc, show
-from bokeh.palettes import Category10, Category10, TolRainbow, Sunset, Cividis, BrBG, BuPu
-from bokeh.models import Range1d, ColumnDataSource
+from bokeh.palettes import Category10, TolRainbow, Sunset, Cividis, BrBG, BuPu
+from bokeh.models import Range1d, ColumnDataSource, TextInput
 from bokeh.models.tools import PanTool, SaveTool, WheelZoomTool, BoxZoomTool, ResetTool, UndoTool, RedoTool, HoverTool, FullscreenTool
 from bokeh.embed import components
 from .helper import plotColors, determine_delimiter
+from .plotHelper import norm, fwhm
 import pandas as pd
 import numpy as np
 
-def abspl_plotter(files, legend_labels, title, x_label, y_label):
+def abspl_plotter(abs_files, pl_files, abs_labels, pl_labels, title, x_label, y_label):
 
-    colors = plotColors(Category10, len(files))
+    colors = plotColors(Category10, len(abs_files))
 
     p = figure(title=str(title),
         sizing_mode='stretch_both',
         x_axis_label=str(x_label), 
         y_axis_label=str(y_label),
         active_scroll="wheel_zoom")
-    
-    for i in np.arange(len(files)):
-        delimiter = determine_delimiter(files[i].read().decode())
-        files[i].seek(0)  # Reset the file cursor to the beginning
-        data = pd.read_csv(files[i], delimiter=delimiter, names=('wavelength', 'intensity'))
+
+    ########################### ABS UPLOADED FILES ###########################
+    for i in np.arange(len(abs_files)):
+        delimiter = determine_delimiter(abs_files[i].read().decode())
+        abs_files[i].seek(0)  # Reset the file cursor to the beginning
+        data = pd.read_csv(abs_files[i], delimiter=delimiter, names=('wavelength', 'intensity'))
         x = data.wavelength
         y = data.intensity
-        # y = y / np.max(y)
-        y = y
+        normNum = 300
+        yNorm, idx = norm(y, x, normNum)
 
         p.toolbar.logo = None
-
-        # p.toolbar.active_drag = p.select(PanTool)[0].name  # Set the name of the first PanTool as the active drag tool
-        p.toolbar.active_scroll = p.select(WheelZoomTool)[0].name  # Set the name of the first WheelZoomTool as the active scroll tool
-
         p.tools = [SaveTool(filename=title), FullscreenTool(), PanTool(), WheelZoomTool(), BoxZoomTool(), ResetTool(), UndoTool(), RedoTool(), HoverTool()]
-        hover = HoverTool()
-        hover.tooltips = [("(x,y)", "($x, $y)")]
-        p.line(x, y, legend_label=legend_labels[i], line_width=2, line_color=colors[i])
+        p.line(x, yNorm, legend_label=abs_labels[i], line_width=2, line_color=colors[i])
         p.legend.click_policy="hide"
 
-        p.x_range = Range1d(300, 800)  # Set the x-axis range from 300 to 800
-        p.y_range = Range1d(0, 1)     # Set the y-axis range from 0 to 1
+    ########################### PL UPLOADED FILES ###########################
+    for i in np.arange(len(pl_files)):
+        delimiter = determine_delimiter(pl_files[i].read().decode())
+        pl_files[i].seek(0)  # Reset the file cursor to the beginning
+        data = pd.read_csv(pl_files[i], delimiter=delimiter, names=('wavelength', 'intensity'))
+        x = data.wavelength
+        y = data.intensity
+        yNorm = norm(y)
+        p.line(x, yNorm, legend_label=pl_labels[i], line_width=2, line_color=colors[i])
 
-    # text_input = TextInput(value="default", title="Label:")
     x_min = 300  # Minimum x value
     x_max = 700  # Maximum x value
     y_min = 0     # Minimum y value
-    y_max = max(y)       # Maximum y value
+    y_max = 1       # Maximum y value
     p.x_range = Range1d(x_min, x_max)
     p.y_range = Range1d(y_min, y_max)
 
     script, div = components(p)
     return script, div
 
-# def xrd_plotter(files, legend_labels, title, x_label, y_label):
 def xrd_plotter(cardfiles, files, cardfile_labels, legend_labels, title, x_label, y_label):
 
     ########################### CARD UPLOADED FILES ###########################
