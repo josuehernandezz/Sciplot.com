@@ -1,9 +1,11 @@
 from django import forms
 from multiupload.fields import MultiFileField
 
+# class AbsForm(forms.Form):
+#     abs_files = MultiFileField(min_num=1, max_num=10,
+#                         label="Abs Files")
 class AbsForm(forms.Form):
-    abs_files = MultiFileField(min_num=1, max_num=10,
-                        label="Abs Files")
+    abs_files = MultiFileField(min_num=1, max_num=10, label="Abs Files", required=False)
     
     abs_labels = forms.CharField(
                         widget=forms.TextInput(
@@ -41,13 +43,13 @@ class XrdForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
-        self.fields['cardFiles'] = MultiFileField(
+        self.fields['card_files'] = MultiFileField(
             min_num=1,
             max_num=10,
             label="Card Files"
         )
         
-        self.fields['cardfile_labels'] = forms.CharField(
+        self.fields['card_file_labels'] = forms.CharField(
             widget=forms.TextInput(attrs={
                 'class': 'cardfile_labels-input',
                 'placeholder': 'Label 1, Label 2 ...'
@@ -56,11 +58,11 @@ class XrdForm(forms.Form):
             required=False
         )
         
-        self.fields['files'] = MultiFileField(
+        self.fields['xrd_files'] = MultiFileField(
             label='Xrd Files',
         )
 
-        self.fields['legend_labels'] = forms.CharField(
+        self.fields['xrd_labels'] = forms.CharField(
                         widget=forms.TextInput(
                             attrs={
                                 'placeholder': 'Label 1, Label 2 ...'

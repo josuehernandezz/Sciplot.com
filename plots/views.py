@@ -46,13 +46,15 @@ def xrd(request):
     if request.method == 'POST':
         form = XrdForm(request.POST, request.FILES)
         if form.is_valid():
-            cardFiles = request.FILES.getlist('cardFiles')
-            files = request.FILES.getlist('files')
+            cardFiles = request.FILES.getlist('card_files')
+            # print('cardFiles')
+            # print(cardFiles)
+            files = request.FILES.getlist('xrd_files')
 
-            card_input_labels = form.cleaned_data.get('cardfile_labels')
+            card_input_labels = form.cleaned_data.get('card_file_labels')
             card_legend_labels = card_input_labels.split(',') if card_input_labels else [f'Card {i+1}' for i in range(len(cardFiles))]
 
-            input_labels = form.cleaned_data.get('legend_labels')
+            input_labels = form.cleaned_data.get('xrd_labels')
             legend_labels = input_labels.split(',') if input_labels else [f'xrd {i+1}' for i in range(len(files))]            
  
             title = form.cleaned_data.get('title') or 'Powder XRD'
