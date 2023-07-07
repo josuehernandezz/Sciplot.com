@@ -19,7 +19,6 @@ def abspl(request):
     if request.method == 'POST':
         form = AbsForm(request.POST, request.FILES)
         if form.is_valid():
-            
             # Abs file handle
             abs_files = request.FILES.getlist('abs_files')
             input_abs_labels = form.cleaned_data.get('abs_labels')
@@ -35,41 +34,46 @@ def abspl(request):
             y_label = 'Intensity (a.u.)'
 
             p = abspl_plotter(abs_files, pl_files, abs_labels, pl_labels, title, x_label, y_label) 
-            # Redirect to a success page or render a success message
-            return render(request, 'plot.html', 
-            {'p1': p[0], 'p2': p[1], 'title': title, 'x_label': x_label, 'y_label': y_label})
-            # return render(request, 'plot.html', {'script': script, 'div': div, 'script_i': script_i, 'div_i': div_i, 'title': title, 'x_label': x_label, 'y_label': y_label})
+            vars = {'p1': p[0], 'p2': p[1], 'title': title, 'x_label': x_label, 'y_label': y_label}
+            return render(request, 'plot.html', vars)            
+        else:
+            vars = {'form': form}
+            return render(request, 'upload.html', vars)
     else:
         form = AbsForm()
         plot_type = '/abspl'
-        return render(request, 'upload.html', {'form': form, 'plot_type': plot_type})
+        vars = {'form': form, 'plot_type': plot_type}
+        return render(request, 'upload.html', vars)
 
 def xrd(request):
     if request.method == 'POST':
         form = XrdForm(request.POST, request.FILES)
         if form.is_valid():
+            # Card file handle
             cardFiles = request.FILES.getlist('card_files')
-            # print('cardFiles')
-            # print(cardFiles)
-            files = request.FILES.getlist('xrd_files')
-
             card_input_labels = form.cleaned_data.get('card_file_labels')
-            card_legend_labels = card_input_labels.split(',') if card_input_labels else [f'Card {i+1}' for i in range(len(cardFiles))]
-
-            input_labels = form.cleaned_data.get('xrd_labels')
-            legend_labels = input_labels.split(',') if input_labels else [f'xrd {i+1}' for i in range(len(files))]            
+            card_labels = card_input_labels.split(',') if card_input_labels else [f'Card {i+1}' for i in range(len(cardFiles))]
+            
+            # XRD file handle
+            xrd_files = request.FILES.getlist('xrd_files')
+            xrd_input_labels = form.cleaned_data.get('xrd_labels')
+            xrd_labels = xrd_input_labels.split(',') if xrd_input_labels else [f'xrd {i+1}' for i in range(len(xrd_files))]            
  
             title = form.cleaned_data.get('title') or 'Powder XRD'
             x_label = r'2θ (degree)'
             y_label = 'Intensity (a.u.)'
 
-            p = xrd_plotter(cardFiles, files, card_legend_labels, legend_labels, title, x_label, y_label)
-            # Redirect to a success page or render a success message
-            return render(request, 'plot.html', {'p1': p[0], 'p2': p[1], 'title': title, 'x_label': x_label, 'y_label': y_label})
+            p = xrd_plotter(cardFiles, xrd_files, card_labels, xrd_labels, title, x_label, y_label)
+            vars = {'p1': p[0], 'p2': p[1], 'title': title, 'x_label': x_label, 'y_label': y_label}
+            return render(request, 'plot.html', vars)
+        else:            
+            vars = {'form': form}
+            return render(request, 'upload.html', vars)
     else:
         form = XrdForm()
         plot_type = '/pxrd'
-        return render(request, 'upload.html', {'form': form, 'plot_type': plot_type})
+        vars = {'form': form, 'plot_type': plot_type}
+        return render(request, 'upload.html', vars)
 
 # def test(request):
 #     if request.method == 'POST':

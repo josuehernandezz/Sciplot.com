@@ -63,7 +63,9 @@ def abspl_plotter(abs_files, pl_files, abs_labels, pl_labels, title, x_label, y_
 
 def xrd_plotter(card_files, xrd_files, card_labels, xrd_labels, title, x_label, y_label):
     ########################### CARD UPLOADED FILES ###########################
-    card_colors = plotColors(Cividis, len(card_files))
+    if len(card_files) != 0:
+        card_colors = plotColors(Cividis, len(card_files))
+        card_labels = card_labels[:len(card_files)]  # Truncate legend_labels to match the number of files
 
     # Create the figure
     p = figure(sizing_mode='stretch_both', title=title)

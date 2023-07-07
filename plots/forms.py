@@ -6,8 +6,7 @@ from multiupload.fields import MultiFileField
 #                         label="Abs Files")
 class AbsForm(forms.Form):
     abs_files = MultiFileField(min_num=1, max_num=10, 
-                               label="Abs Files", 
-                               required=True)
+                               label="Abs Files")
     
     abs_labels = forms.CharField(
                         widget=forms.TextInput(
@@ -16,28 +15,19 @@ class AbsForm(forms.Form):
                         required=False
                         ) 
 
-    pl_files = MultiFileField(min_num=1, 
-                        max_num=10,
-                        label="PL Files",
-                        required=False
-                        )
+    pl_files = MultiFileField(min_num=1, max_num=10,
+                            label="PL Files",
+                            required=False
+                            )
     
-    pl_labels = forms.CharField(
-                        widget=forms.TextInput(
-                            attrs={'placeholder': 'Label 1, Label 2 ...'}),
+    pl_labels = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Label 1, Label 2 ...'}),
                         label="PL Labels",
                         required=False
                         )
 
-    title = forms.CharField(
-                        widget=forms.TextInput(
-                            attrs={
-                                'class': 'title-input',
-                                'placeholder': 'Abs & PL'
-                                   }),
+    title = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Abs & PL'}),
                         label='Figure Title',
                         required=False,
-                        help_text=''
                         )
 
 class XrdForm(forms.Form):
@@ -48,7 +38,8 @@ class XrdForm(forms.Form):
         self.fields['card_files'] = MultiFileField(
             min_num=1,
             max_num=10,
-            label="Card Files"
+            label="Card Files",
+            required=False
         )
         
         self.fields['card_file_labels'] = forms.CharField(
@@ -61,6 +52,8 @@ class XrdForm(forms.Form):
         )
         
         self.fields['xrd_files'] = MultiFileField(
+            min_num = 1,
+            max_num=10,
             label='Xrd Files',
         )
 
