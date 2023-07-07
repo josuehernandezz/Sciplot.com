@@ -52,8 +52,9 @@
   width: 100%;
   height: 600px;
   padding: 5px;
+  margin: 5px;
   /* margin-left: 15px; */
-  padding-right: 15px;
+  /* padding-right: 15px; */
 }
 .graph {
   border: 1px solid var(--post-borderline);
@@ -71,7 +72,6 @@
   align-items: center;
   width: 50px;
 }
-
 .y-axis {
   border: 1px solid var(--post-borderline);
   text-align: center;
@@ -95,7 +95,6 @@
 .x-axis:hover {
   border: 1px solid var(--post-hover-borderline);
 }
-
 </style>
 {% endblock %}
 
@@ -107,7 +106,6 @@
 
 <!-- ############################## column1 ############################## -->
 {% block column1 %}
-
 {% endblock %}
 
 
@@ -127,7 +125,8 @@
     </div> -->
     <div class="graph-container">
       <div class="graph">
-        {{ div | safe }}
+        {{ p2 | safe }}
+        {{ p1 | safe }}
       </div>
     </div>
   </div>
@@ -139,13 +138,11 @@
 
 <!-- ############################## column3 ############################## -->
 {% block column3 %}
-
 {% endblock %}
 
 
 <!-- ############################## footer ############################## -->
 {% block footer %}
-
 {% endblock %}
 
 <!-- ############################## customJS ############################## -->

@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from bokeh.plotting import figure
+from scipy.signal import argrelextrema
 
 def norm(y, x = None, num: int = None):
     '''
@@ -49,10 +50,31 @@ def fwhm(pl_wave: pd.core.series.Series, pl_int: pd.core.series.Series):
     hm_x = np.linspace(pl_wave[min_idx],pl_wave[max_idx],100)
     hm_y = np.linspace(hf_mx_int,hf_mx_int,100)
 
-    p = figure(title=str('title'),
-        sizing_mode='stretch_both',
-        x_axis_label=str('x_label'), 
-        y_axis_label=str('y_label'),
-        active_scroll="wheel_zoom")
+    # p = figure(title=str('title'),
+    #     sizing_mode='stretch_both',
+    #     x_axis_label=str('x_label'), 
+    #     y_axis_label=str('y_label'),
+    #     active_scroll="wheel_zoom")
 
-    return p.line(hm_x, hm_y, line_width=2)
+    return hm_x, hm_y, fwhm
+
+def localMaxima(series, nth:int =1):
+    x = np.array(series)
+
+    local_maxima_indices = argrelextrema(x, np.greater)[0]
+    local_maxima_values = x[local_maxima_indices]
+
+    if len(local_maxima_indices) < nth:
+        print(f"There are not enough local maxima in the series to retrieve the {nth}th highest local maximum.")
+        return None
+
+    # Sort local maxima values in descending order
+    sorted_maxima_indices = np.argsort(local_maxima_values)[::-1]
+    sorted_maxima_values = local_maxima_values[sorted_maxima_indices]
+
+    # Select the nth highest peak
+    nth_max_idx = local_maxima_indices[sorted_maxima_indices[nth - 1]]
+    nth_max_val = sorted_maxima_values[nth - 1]
+
+    return nth_max_idx, nth_max_val
+

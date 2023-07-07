@@ -1,0 +1,242 @@
+{% extends 'base2.html' %}
+
+{% load static %}
+
+
+<!-- ############################## Title ############################## -->
+{% block title %}Upload{% endblock %}
+
+
+<!-- ############################## customStyles ############################## -->
+{% block customStyles%}
+<style>
+#uploadForm {
+  margin-top: 25px;
+  min-width: 90%;
+}
+#uploadForm input {
+  /* Add your desired styles here */
+  /* width: 100px; */
+  width: 90%;
+}
+#uploadForm p {
+  text-align: center;
+}
+</style>
+
+<style>
+.figure-container {
+  /* border: 1px solid rgb(0, 162, 255); */
+  margin-top: 25px;
+  min-width: 400px;
+  max-width: 1000px;
+  margin: auto;
+  border: 1px solid var(--post-borderline);
+  border-radius: var(--border-radius);
+  resize: both;
+  overflow: visible;
+  display: block;
+  justify-content: center;
+  transition: 0.2s border;
+}
+.figure-container:hover {
+  border: 1px solid var(--post-hover-borderline);
+}
+.graph-title-container {
+  padding-top: 5px;
+}
+.graph-title {
+  border: 1px solid var(--post-borderline);
+  width: 150px;
+  display: flex;
+  justify-content: center;
+  margin: auto;
+  text-align: center;
+}
+.graph-title:hover {
+  border: 1px solid var(--post-hover-borderline);
+}
+.y-axis-graph-container {
+  /* border: 1px solid red; */
+  display: flex;
+}
+.graph-container {
+  /* border: 1px solid red; */
+  min-width: 200px;
+  min-height: 400px;
+  width: 100%;
+  height: 600px;
+  padding: 5px;
+  margin: 5px;
+  /* margin-left: 15px; */
+  /* padding-right: 15px; */
+}
+.graph {
+  border: 1px solid var(--post-borderline);
+  border-radius: 4px;
+  width: 100%;
+  height: 100%;
+}
+.graph:hover {
+  border: 1px solid var(--post-hover-borderline);
+}
+.y-axis-container {
+  /* border: 1px solid red; */
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+}
+.y-axis {
+  border: 1px solid var(--post-borderline);
+  text-align: center;
+  width: 150px;
+  transform: rotate(-90deg);
+}
+.y-axis:hover {
+  border: 1px solid var(--post-hover-borderline);
+}
+.x-axis-container {
+  display: block;
+  padding-bottom: 5px;
+}
+.x-axis {
+  border: 1px solid var(--post-borderline);
+  text-align: center;
+  display: flex;
+  margin: auto; 
+  width: 150px;
+}
+.x-axis:hover {
+  border: 1px solid var(--post-hover-borderline);
+}
+</style>
+{% endblock %}
+
+<!-- ############################## customJS ############################## -->
+{% block customJS %}
+
+{% if plot_type == "/pxrd" %}
+  <script>
+  function clearInputFile(f) {
+    if (f.value) {
+      try {
+        f.value = ''; // For IE11, latest Chrome/Firefox/Opera...
+      } catch (err) { }
+      if (f.value) { // For IE5 ~ IE10
+        var form = document.createElement('form');
+        var parentNode = f.parentNode;
+        var ref = f.nextSibling;
+        form.appendChild(f);
+        form.reset();
+        parentNode.insertBefore(f, ref);
+      }
+    }
+  }
+    document.addEventListener('DOMContentLoaded', function() {
+    var clearFilesBtn = document.getElementById('clearFilesBtn');
+    var cardFilesInput = document.getElementById('id_card_files');
+    var xrdFilesInput = document.getElementById('id_xrd_files');
+  
+    clearFilesBtn.addEventListener('click', function() {
+      clearInputFile(cardFilesInput);
+      clearInputFile(xrdFilesInput);
+    });
+  });
+  </script>
+{% elif plot_type == "/abspl" %}
+  <script>
+  function clearInputFile(f) {
+    if (f.value) {
+      try {
+        f.value = ''; // For IE11, latest Chrome/Firefox/Opera...
+      } catch (err) { }
+      if (f.value) { // For IE5 ~ IE10
+        var form = document.createElement('form');
+        var parentNode = f.parentNode;
+        var ref = f.nextSibling;
+        form.appendChild(f);
+        form.reset();
+        parentNode.insertBefore(f, ref);
+      }
+    }
+  }
+  
+  document.addEventListener('DOMContentLoaded', function() {
+    var clearFilesBtn = document.getElementById('clearFilesBtn');
+    var absFilesInput = document.getElementById('id_abs_files');
+    var plFilesInput = document.getElementById('id_pl_files');
+  
+    clearFilesBtn.addEventListener('click', function() {
+      clearInputFile(absFilesInput);
+      clearInputFile(plFilesInput);
+    });
+  });
+  </script>
+{% endif %}
+
+{% endblock %}
+
+<!-- ############################## headerbutton ############################## -->
+{% block headerbutton %}
+<a class="header-button" href="/">Home</a>
+{% endblock %}
+
+<!-- ############################## column1 ############################## -->
+{% block column1 %}
+<h2 style="text-align: center;">
+    Upload
+  </h2>
+  <h3 style="text-align: center;">
+    {% if plot_type == "/pxrd" %}
+      Powder XRD
+    {% elif plot_type == "/abspl" %}
+      Absorbance and Photoluminescence
+    {% endif %}
+  </h3>
+  
+  <form id="uploadForm" enctype="multipart/form-data" method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div style="display: flex; justify-content: center; align-items: center;">
+      <div>
+        <button id="clearFilesBtn" class="btn"  type="button">Clear Files</button>
+        <button class="btn" type="submit">Upload</button>
+      </div>
+    </div>
+  </form>
+{% endblock %}
+
+<!-- ############################## column2 ############################## -->
+{% block column2 %}
+
+<h2 style="text-align: center;">
+    {{ title }}
+  </h2>
+  
+  <div class="figure-container">
+    <!-- <div class="graph-title-container">
+      <input id="title-input" class="graph-title" type="text" value="{{ title }}">
+    </div> -->
+    <div class="y-axis-graph-container">
+      <!-- <div class="y-axis-container">
+        <input class="y-axis" type="text" value="{{ y_label }}">
+      </div> -->
+      <div class="graph-container">
+        <div class="graph">
+          {{ p2 | safe }}
+          {{ p1 | safe }}
+        </div>
+      </div>
+    </div>
+    <!-- <div class="x-axis-container">
+      <input class="x-axis" type="text" value="{{ x_label }}">
+    </div> -->
+  </div>
+
+
+{% endblock %}
+
+<!-- ############################## footer ############################## -->
+{% block footer %}
+{% endblock %}

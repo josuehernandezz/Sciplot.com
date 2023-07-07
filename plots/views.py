@@ -34,9 +34,11 @@ def abspl(request):
             x_label = 'Wavelength (nm)'
             y_label = 'Intensity (a.u.)'
 
-            script, div = abspl_plotter(abs_files, pl_files, abs_labels, pl_labels, title, x_label, y_label)
+            p = abspl_plotter(abs_files, pl_files, abs_labels, pl_labels, title, x_label, y_label) 
             # Redirect to a success page or render a success message
-            return render(request, 'plot.html', {'script': script, 'div': div, 'title': title, 'x_label': x_label, 'y_label': y_label})
+            return render(request, 'plot.html', 
+            {'p1': p[0], 'p2': p[1], 'title': title, 'x_label': x_label, 'y_label': y_label})
+            # return render(request, 'plot.html', {'script': script, 'div': div, 'script_i': script_i, 'div_i': div_i, 'title': title, 'x_label': x_label, 'y_label': y_label})
     else:
         form = AbsForm()
         plot_type = '/abspl'
@@ -61,10 +63,36 @@ def xrd(request):
             x_label = r'2θ (degree)'
             y_label = 'Intensity (a.u.)'
 
-            script, div = xrd_plotter(cardFiles, files, card_legend_labels, legend_labels, title, x_label, y_label)
+            p = xrd_plotter(cardFiles, files, card_legend_labels, legend_labels, title, x_label, y_label)
             # Redirect to a success page or render a success message
-            return render(request, 'plot.html', {'script': script, 'div': div, 'title': title, 'x_label': x_label, 'y_label': y_label})
+            return render(request, 'plot.html', {'p1': p[0], 'p2': p[1], 'title': title, 'x_label': x_label, 'y_label': y_label})
     else:
         form = XrdForm()
         plot_type = '/pxrd'
         return render(request, 'upload.html', {'form': form, 'plot_type': plot_type})
+
+# def test(request):
+#     if request.method == 'POST':
+#         form = AbsForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             # Abs file handle
+#             abs_files = request.FILES.getlist('abs_files')
+#             input_abs_labels = form.cleaned_data.get('abs_labels')
+#             abs_labels = input_abs_labels.split(',') if input_abs_labels else [f'Abs {i+1}' for i in range(len(abs_files))]
+
+#             # PL file handle
+#             pl_files = request.FILES.getlist('pl_files')
+#             input_pl_labels = form.cleaned_data.get('pl_labels')
+#             pl_labels = input_pl_labels.split(',') if input_pl_labels else [f'PL {i+1}' for i in range(len(pl_files))]
+
+#             title = form.cleaned_data.get('title') or 'Absorbance & Photoluminescence'
+#             x_label = 'Wavelength (nm)'
+#             y_label = 'Intensity (a.u.)'
+
+#             p = abspl_plotter(abs_files, pl_files, abs_labels, pl_labels, title, x_label, y_label) 
+#             # Redirect to a success page or render a success message
+#             return render(request, 'test.html', {'form': form, 'p1': p[0], 'p2': p[1], 'title': title, 'x_label': x_label, 'y_label': y_label})
+#     else:
+#         form = AbsForm()
+#         plot_type = '/abspl'
+#         return render(request, 'test.html', {'form': form, 'plot_type': plot_type})

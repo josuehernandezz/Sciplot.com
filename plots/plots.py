@@ -1,10 +1,10 @@
 from bokeh.plotting import figure, curdoc, show
 from bokeh.palettes import Category20, Cividis
-from bokeh.models import Range1d, ColumnDataSource, TextInput
+from bokeh.models import Range1d, ColumnDataSource, CustomJS, TextInput
 from bokeh.models.tools import PanTool, SaveTool, WheelZoomTool, BoxZoomTool, ResetTool, UndoTool, RedoTool, HoverTool, FullscreenTool
 from bokeh.embed import components
 from .helper import plotColors, determine_delimiter
-from .plotHelper import norm, fwhm
+from .plotHelper import norm, fwhm, localMaxima
 import pandas as pd
 import numpy as np
 
@@ -16,7 +16,7 @@ def abspl_plotter(abs_files, pl_files, abs_labels, pl_labels, title, x_label, y_
         sizing_mode='stretch_both',
         x_axis_label=str(x_label), 
         y_axis_label=str(y_label),
-        active_scroll="wheel_zoom")
+        )
 
     ########################### ABS UPLOADED FILES ###########################
     for i in np.arange(len(abs_files)):
@@ -27,7 +27,6 @@ def abspl_plotter(abs_files, pl_files, abs_labels, pl_labels, title, x_label, y_
         y = data.intensity
         normNum = 300
         yNorm, idx = norm(y, x, normNum)
-
         p.line(x, yNorm, legend_label=abs_labels[i], line_width=2, line_color=abs_colors[i])
 
     ########################### PL UPLOADED FILES ###########################
@@ -41,27 +40,33 @@ def abspl_plotter(abs_files, pl_files, abs_labels, pl_labels, title, x_label, y_
         x = data.wavelength
         y = data.intensity
         yNorm = norm(y)
+        xf, yf, fwhmv = fwhm(x, y)
+        nth_max_idx, nth_max_val = localMaxima(yNorm)
+        pl_x_max = x[nth_max_idx]
         p.line(x, yNorm, legend_label=pl_labels[i], line_width=2, line_color=pl_colors[i])
+        p.line(xf, yf, legend_label='FWHM = %.1f meV' % fwhmv, line_width=2, line_color=abs_colors[i])
+        p.circle(pl_x_max, nth_max_val, size=8, legend_label='Max = %.1f meV' % pl_x_max, fill_color='black')
 
     p.toolbar.logo = None
     p.tools = [SaveTool(filename=title), FullscreenTool(), PanTool(), WheelZoomTool(), BoxZoomTool(), ResetTool(), UndoTool(), RedoTool(), HoverTool()]
+    p.toolbar.active_drag = p.select_one(BoxZoomTool)
+    p.toolbar.active_scroll = p.select_one(WheelZoomTool)
     p.legend.click_policy="hide"
     x_min = 300  # Minimum x value
     x_max = 700  # Maximum x value
     y_min = 0     # Minimum y value
-    y_max = 1       # Maximum y value
+    y_max = 1.1       # Maximum y value
     p.x_range = Range1d(x_min, x_max)
     p.y_range = Range1d(y_min, y_max)
 
-    script, div = components(p)
-    return script, div
+    return components(p)
 
 def xrd_plotter(card_files, xrd_files, card_labels, xrd_labels, title, x_label, y_label):
     ########################### CARD UPLOADED FILES ###########################
     card_colors = plotColors(Cividis, len(card_files))
 
     # Create the figure
-    p = figure(sizing_mode='stretch_both', title=title, active_scroll="wheel_zoom")
+    p = figure(sizing_mode='stretch_both', title=title)
     
     for i, cardfile in enumerate(card_files):
         delimiter = determine_delimiter(cardfile.read().decode())
@@ -99,6 +104,8 @@ def xrd_plotter(card_files, xrd_files, card_labels, xrd_labels, title, x_label, 
     # Set axis labels
     p.toolbar.logo = None
     p.tools = [SaveTool(filename=title), FullscreenTool(), PanTool(), WheelZoomTool(), BoxZoomTool(), ResetTool(), UndoTool(), RedoTool(), HoverTool()]
+    p.toolbar.active_drag = p.select_one(BoxZoomTool)
+    p.toolbar.active_scroll = p.select_one(WheelZoomTool)
     p.legend.click_policy = "hide"
     p.xaxis.axis_label = x_label
     p.yaxis.axis_label = y_label
@@ -109,5 +116,4 @@ def xrd_plotter(card_files, xrd_files, card_labels, xrd_labels, title, x_label, 
     p.x_range = Range1d(x_min, x_max)
     p.y_range = Range1d(y_min, y_max)
 
-    script, div = components(p)
-    return script, div
+    return components(p)
