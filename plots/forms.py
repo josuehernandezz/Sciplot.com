@@ -5,7 +5,9 @@ from multiupload.fields import MultiFileField
 #     abs_files = MultiFileField(min_num=1, max_num=10,
 #                         label="Abs Files")
 class AbsForm(forms.Form):
-    abs_files = MultiFileField(min_num=1, max_num=10, label="Abs Files", required=False)
+    abs_files = MultiFileField(min_num=1, max_num=10, 
+                               label="Abs Files", 
+                               required=True)
     
     abs_labels = forms.CharField(
                         widget=forms.TextInput(
