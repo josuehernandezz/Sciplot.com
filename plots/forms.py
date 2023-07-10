@@ -1,13 +1,25 @@
 from django import forms
 from multiupload.fields import MultiFileField
+from django.core.exceptions import ValidationError
+from django.core.validators import FileExtensionValidator
 
-# class AbsForm(forms.Form):
-#     abs_files = MultiFileField(min_num=1, max_num=10,
-#                         label="Abs Files")
+from django import forms
+from django.core.exceptions import ValidationError
+
+ALLOWED_EXTENSIONS = ['.txt', '.csv']  # Add the allowed file extensions here
+
+def validate_file_extension(value):
+    for file in value:
+        file_extension = file.name.lower().split('.')[-1]
+        print(file.name.lower().split('.')[-1])
+        if file_extension not in ALLOWED_EXTENSIONS:
+            raise ValidationError("Only {} files are allowed.".format(', '.join(ALLOWED_EXTENSIONS)))
+
 class AbsForm(forms.Form):
     abs_files = MultiFileField(min_num=1, max_num=10, 
-                               label="Abs Files")
-    
+                               label="Abs Files",
+                               )
+        
     abs_labels = forms.CharField(
                         widget=forms.TextInput(
                             attrs={'placeholder': 'Label 1, Label 2 ...'}),

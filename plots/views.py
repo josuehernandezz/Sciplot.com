@@ -1,19 +1,29 @@
 from django.shortcuts import render, redirect
 from .forms import AbsForm, XrdForm
 from django.http import JsonResponse
-from .plots import abspl_plotter, xrd_plotter
-from .exampleplots import exampleplot
+from . import bokehPlots as bpl
 
 # Create your views here.
 
 def home(request):
-    files = ['static/files/Absorbance.txt','static/files/Photoluminesence.txt']
-    legend_labels = ['Abs','PL']
-    title = 'Absorbance & Photoluminesence'
-    x_label = 'Wavelength (nm)'
-    y_label = 'Intensity (a.u.)'
-    script, div = exampleplot(files, legend_labels, title, x_label, y_label)
-    return render(request, 'home.html', {'script': script, 'div': div})
+    abs_path = 'static/files/AbsPl/Absorbance.txt'
+    pl_path = 'static/files/AbsPl/Photoluminesence.txt'
+    
+    abs_label = 'Abs'
+    pl_label = 'PL'
+    
+    card_path ='static/files/Xrd/CsPbBr3_ortho_pnma.txt'
+    xrd_path = 'static/files/Xrd/xrd.txt'
+
+    card_label = 'Orthorhombic'
+    xrd_label = 'XRD 1'
+
+    p= bpl.abspl_plotter([abs_path], [pl_path], [abs_label], [pl_label])
+    p2 = bpl.xrd_plotter([card_path], [xrd_path], [card_label], [xrd_label])
+    
+    vars = {'p1': p[0], 'p2': p[1], 
+            'p3': p2[0], 'p4': p2[1]}
+    return render(request, 'home.html', vars)
 
 def abspl(request):
     if request.method == 'POST':
@@ -30,12 +40,10 @@ def abspl(request):
             pl_labels = input_pl_labels.split(',') if input_pl_labels else [f'PL {i+1}' for i in range(len(pl_files))]
 
             title = form.cleaned_data.get('title') or 'Absorbance & Photoluminescence'
-            x_label = 'Wavelength (nm)'
-            y_label = 'Intensity (a.u.)'
 
-            p = abspl_plotter(abs_files, pl_files, abs_labels, pl_labels, title, x_label, y_label) 
-            vars = {'p1': p[0], 'p2': p[1], 'title': title, 'x_label': x_label, 'y_label': y_label}
-            return render(request, 'plot.html', vars)            
+            p = bpl.abspl_plotter(abs_files, pl_files, abs_labels, pl_labels, title)
+            vars = {'p1': p[0], 'p2': p[1], 'title': title}
+            return render(request, 'plot.html', vars)
         else:
             vars = {'form': form}
             return render(request, 'upload.html', vars)
@@ -60,11 +68,9 @@ def xrd(request):
             xrd_labels = xrd_input_labels.split(',') if xrd_input_labels else [f'xrd {i+1}' for i in range(len(xrd_files))]            
  
             title = form.cleaned_data.get('title') or 'Powder XRD'
-            x_label = r'2θ (degree)'
-            y_label = 'Intensity (a.u.)'
 
-            p = xrd_plotter(cardFiles, xrd_files, card_labels, xrd_labels, title, x_label, y_label)
-            vars = {'p1': p[0], 'p2': p[1], 'title': title, 'x_label': x_label, 'y_label': y_label}
+            p = bpl.xrd_plotter(cardFiles, xrd_files, card_labels, xrd_labels, title)
+            vars = {'p1': p[0], 'p2': p[1], 'title': title}
             return render(request, 'plot.html', vars)
         else:            
             vars = {'form': form}
@@ -74,29 +80,3 @@ def xrd(request):
         plot_type = '/pxrd'
         vars = {'form': form, 'plot_type': plot_type}
         return render(request, 'upload.html', vars)
-
-# def test(request):
-#     if request.method == 'POST':
-#         form = AbsForm(request.POST, request.FILES)
-#         if form.is_valid():
-#             # Abs file handle
-#             abs_files = request.FILES.getlist('abs_files')
-#             input_abs_labels = form.cleaned_data.get('abs_labels')
-#             abs_labels = input_abs_labels.split(',') if input_abs_labels else [f'Abs {i+1}' for i in range(len(abs_files))]
-
-#             # PL file handle
-#             pl_files = request.FILES.getlist('pl_files')
-#             input_pl_labels = form.cleaned_data.get('pl_labels')
-#             pl_labels = input_pl_labels.split(',') if input_pl_labels else [f'PL {i+1}' for i in range(len(pl_files))]
-
-#             title = form.cleaned_data.get('title') or 'Absorbance & Photoluminescence'
-#             x_label = 'Wavelength (nm)'
-#             y_label = 'Intensity (a.u.)'
-
-#             p = abspl_plotter(abs_files, pl_files, abs_labels, pl_labels, title, x_label, y_label) 
-#             # Redirect to a success page or render a success message
-#             return render(request, 'test.html', {'form': form, 'p1': p[0], 'p2': p[1], 'title': title, 'x_label': x_label, 'y_label': y_label})
-#     else:
-#         form = AbsForm()
-#         plot_type = '/abspl'
-#         return render(request, 'test.html', {'form': form, 'plot_type': plot_type})

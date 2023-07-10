@@ -5,5 +5,4 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('abspl', views.abspl, name='abspl'),
     path('pxrd', views.xrd, name='xrd'),
-    # path('test', views.test, name='test'),
 ]
