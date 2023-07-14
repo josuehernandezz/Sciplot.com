@@ -301,7 +301,7 @@ def nth_integral(x, y, p,
             initial = 1
             Obs_2N, Obs_2, blk_int, Obs_1, dilute = qy_vals
             En_t = integrate.trapezoid(y, x)
-            scaler = Slider(start=1, end=5, value=initial, step=0.1, title="Scale", visible=False)
+            scaler = Slider(start=1, end=5, value=initial, step=0.1, title="Scale Enhanced spectrum", visible=False)
             callback = CustomJS(args=dict(source=source, scaler=scaler, initial=initial, 
                                 En_t=En_t,
                                 Obs_2N=Obs_2N,
