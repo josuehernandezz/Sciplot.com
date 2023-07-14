@@ -18,7 +18,7 @@
 /* Style the input elements */
 #uploadForm input {
   /* Add your desired styles here */
-  width: 500px;
+  width: 60%;
 }
 #uploadForm p {
   text-align: center;
@@ -87,6 +87,39 @@
     });
   });
   </script>
+{% elif plot_type == "/plqy" %}
+<script>
+function clearInputFile(f) {
+  if (f.value) {
+    try {
+      f.value = ''; // For IE11, latest Chrome/Firefox/Opera...
+    } catch (err) { }
+    if (f.value) { // For IE5 ~ IE10
+      var form = document.createElement('form');
+      var parentNode = f.parentNode;
+      var ref = f.nextSibling;
+      form.appendChild(f);
+      form.reset();
+      parentNode.insertBefore(f, ref);
+    }
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  var clearFilesBtn = document.getElementById('clearFilesBtn');
+  var c = document.getElementById('id_cor_file');
+  var b = document.getElementById('id_blk_file');
+  var s = document.getElementById('id_sct_file');
+  var e = document.getElementById('id_emi_file');
+
+  clearFilesBtn.addEventListener('click', function() {
+    clearInputFile(c);
+    clearInputFile(b);
+    clearInputFile(s);
+    clearInputFile(e);
+  });
+});
+</script>
 {% endif %}
 
 {% endblock %}
@@ -110,6 +143,8 @@
     Powder XRD
   {% elif plot_type == "/abspl" %}
     Absorbance and Photoluminescence
+    {% elif plot_type == "/plqy" %}
+    Quantum Yield
   {% endif %}
 </h3>
 

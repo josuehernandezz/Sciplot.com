@@ -6,15 +6,6 @@ from django.core.validators import FileExtensionValidator
 from django import forms
 from django.core.exceptions import ValidationError
 
-ALLOWED_EXTENSIONS = ['.txt', '.csv']  # Add the allowed file extensions here
-
-def validate_file_extension(value):
-    for file in value:
-        file_extension = file.name.lower().split('.')[-1]
-        print(file.name.lower().split('.')[-1])
-        if file_extension not in ALLOWED_EXTENSIONS:
-            raise ValidationError("Only {} files are allowed.".format(', '.join(ALLOWED_EXTENSIONS)))
-
 class AbsForm(forms.Form):
     abs_files = MultiFileField(min_num=1, max_num=10, 
                                label="Abs Files",
@@ -90,3 +81,51 @@ class XrdForm(forms.Form):
                         )
 
         self.order_fields(field_order=['cardFiles', 'cardfile_labels'])
+
+class PLQYForm(forms.Form):
+    cor_file = MultiFileField(min_num=0, max_num=10, 
+                               label="Correction File",
+                               )
+        
+    cor_label = forms.CharField(
+                        widget=forms.TextInput(
+                        attrs={'placeholder': 'Correction'}),
+                        label="Correction Label",
+                        required=False
+                        )
+
+    blk_file = MultiFileField(min_num=1, max_num=10, 
+                               label="Blank File",
+                               )
+        
+    blk_label = forms.CharField(
+                        widget=forms.TextInput(
+                        attrs={'placeholder': 'Blank'}),
+                        label="Blank Label",
+                        required=False
+                        ) 
+
+    sct_file = MultiFileField(min_num=0, max_num=10,
+                            label="Scatter File",
+                            required=False
+                            )
+    
+    sct_label = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Scatter'}),
+                        label="Scatter Label",
+                        required=False
+                        )
+
+    emi_file = MultiFileField(min_num=0, max_num=10,
+                            label="Emission File",
+                            required=False
+                            )
+    
+    emi_label = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Emission'}),
+                        label="Emission Label",
+                        required=False
+                        )
+
+    title = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'PLQY'}),
+                        label='Figure Title',
+                        required=False,
+                        )

@@ -39,5 +39,23 @@ def xrd_plotter(card_files, xrd_files, card_labels, xrd_labels,
     x_max = max(x)
     p.x_range = Range1d(x_min, x_max)
     p.y_range = Range1d(y_min, y_max)
-    p = pc.plotSettings(p, x_label, y_label, title)
+    p = pc.plotSettings(p, x_label, y_label, title, 'pxrd')
     return components(p)
+
+def plqy_plotter(cor_file, blk_file, sct_file, emi_file, cor_label, blk_label, sct_label, emi_label,
+                title: str = 'PLQY', x_label: str = 'Wavelength (nm)', y_label: str = 'Intensity (a.u.)',
+                theme: str = None,
+                x_min: float = 450, x_max: float = 590, y_min: float = 0, y_max: float = 2):
+
+    p = figure(sizing_mode='stretch_both',
+               title = title, x_axis_label = x_label, y_axis_label = y_label)
+
+    if theme == None:
+        qy, scaler = pc.plqy(cor_file, blk_file, sct_file, emi_file, cor_label, blk_label, sct_label, emi_label, p)
+    else:
+        qy, scaler = pc.plqy(cor_file, blk_file, sct_file, emi_file, cor_label, blk_label, sct_label, emi_label, p)
+    
+    p.x_range = Range1d(x_min, x_max)
+    p.y_range = Range1d(y_min, y_max)
+    p = pc.plotSettings(p, x_label, y_label, title, 'plqy', scaler = scaler)
+    return components(p), qy

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import AbsForm, XrdForm
+from .forms import AbsForm, XrdForm, PLQYForm
 from django.http import JsonResponse
 from . import bokehPlots as bpl
 
@@ -79,4 +79,42 @@ def xrd(request):
         form = XrdForm()
         plot_type = '/pxrd'
         vars = {'form': form, 'plot_type': plot_type}
+        return render(request, 'upload.html', vars)
+
+def plqy(request):
+    if request.method == 'POST':
+        form = PLQYForm(request.POST, request.FILES)
+        if form.is_valid():
+            # Correction file handle
+            cor_file = request.FILES.getlist('cor_file')
+            input_cor_label = form.cleaned_data.get('cor_label')
+            cor_label = input_cor_label.split(',') if input_cor_label else [f'Blank {i+1}' for i in range(len(cor_file))]
+
+            # Blank file handle
+            blk_file = request.FILES.getlist('blk_file')
+            input_blk_label = form.cleaned_data.get('blk_label')
+            blk_label = input_blk_label.split(',') if input_blk_label else [f'Blank {i+1}' for i in range(len(blk_file))]
+
+            # Scatter file handle
+            sct_file = request.FILES.getlist('sct_file')
+            input_sct_label = form.cleaned_data.get('sct_label')
+            sct_label = input_sct_label.split(',') if input_sct_label else [f'Scatter {i+1}' for i in range(len(sct_file))]
+
+            # Emission file handle
+            emi_file = request.FILES.getlist('emi_file')
+            input_emi_label = form.cleaned_data.get('emi_label')
+            emi_label = input_emi_label.split(',') if input_emi_label else [f'Emission {i+1}' for i in range(len(emi_file))]
+            
+            title = form.cleaned_data.get('title') or 'Quantum Yield'
+            
+            p, plqy = bpl.plqy_plotter(cor_file, blk_file, sct_file, emi_file, cor_label, blk_label, sct_label, emi_label, title)
+            vars = {'p1': p[0], 'p2': p[1], 'title': title, 'plqy': plqy}
+            return render(request, 'plot.html', vars)
+        else:
+            vars = {'form': form}
+            return render(request, 'upload.html', vars)
+    else:
+        form = PLQYForm()
+        plot_type = '/plqy'
+        vars = {'form': form,'plot_type': plot_type}
         return render(request, 'upload.html', vars)

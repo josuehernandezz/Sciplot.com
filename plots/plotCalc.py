@@ -6,13 +6,20 @@ from bokeh.layouts import layout, column, row
 from bokeh.models import Styles
 from bokeh.themes import Theme
 
+# other
+from scipy.interpolate import pchip_interpolate
+
 # custom
-from .plotHelper import plotColors, norm, fwhm, localMaxima, themePicker
+from .plotHelper import plotColors, norm, fwhm, localMaxima, themePicker, nthPeakPlotter, integral
+from . import plotHelper as ph
 from .helper import file2df
 
 ############ Bokeh Plot Settings ############
 
-def plotSettings(p: figure, x_label, y_label, title: str = None, plot_type: str = None, theme:str = None):
+def plotSettings(p: figure, x_label, y_label, 
+                title: str = None, plot_type: str = None, 
+                theme:str = None, scaler = None,
+                ):
     p.tools = [PanTool(), BoxZoomTool(), WheelZoomTool(), SaveTool(filename=title), FullscreenTool(),  ResetTool(), UndoTool(), RedoTool(), HoverTool()]
     p.toolbar.active_drag = p.select_one(BoxZoomTool)
     p.toolbar.active_scroll = p.select_one(WheelZoomTool)
@@ -25,12 +32,18 @@ def plotSettings(p: figure, x_label, y_label, title: str = None, plot_type: str 
         step = 10
         value_l = 300
         value_u = 700
-    else:
+    elif plot_type == 'pxrd':
         low = -10
         high = 80
         step = 5
         value_l = 10
         value_u = 45
+    else:
+        low = 450
+        high = 590
+        step = 5
+        value_l = low
+        value_u = high
 
     # Define the input text element
     title = TextInput(value=title, width=200, align='center', visible=False)
@@ -54,26 +67,48 @@ def plotSettings(p: figure, x_label, y_label, title: str = None, plot_type: str 
     x_lim_cb_u = CustomJS(args=dict(xrange=p.x_range, x_lim=x_lim_u), code='''xrange.end = x_lim.value''')
     x_lim_u.js_on_change("value", x_lim_cb_u)
 
-    plot_settings_button = Button(label="Plot settings", button_type="primary")
-    plot_settings_cb = CustomJS(args=dict(title=title, x_axis=x_axis, y_axis=y_axis, x_lim_l=x_lim_l, x_lim_u=x_lim_u), code="""
-    if (title.visible === false){
-        title.visible = true;
-        x_axis.visible = true;
-        y_axis.visible = true;
-        x_lim_l.visible = true;
-        x_lim_u.visible = true;
-    } else {
-        title.visible = false;
-        x_axis.visible = false;
-        y_axis.visible = false;
-        x_lim_l.visible = false;
-        x_lim_u.visible = false;
-    }
-    """)
-    plot_settings_button.js_on_click(plot_settings_cb)
+    if scaler is not None:
+        plot_settings_button = Button(label="Plot settings", button_type="primary")
+        plot_settings_cb = CustomJS(args=dict(title=title, x_axis=x_axis, y_axis=y_axis, x_lim_l=x_lim_l, x_lim_u=x_lim_u, scaler=scaler), code="""
+        if (title.visible === false){
+            title.visible = true;
+            x_axis.visible = true;
+            y_axis.visible = true;
+            x_lim_l.visible = true;
+            x_lim_u.visible = true;
+            scaler.visible = true;
+        } else {
+            title.visible = false;
+            x_axis.visible = false;
+            y_axis.visible = false;
+            x_lim_l.visible = false;
+            x_lim_u.visible = false;
+            scaler.visible = false;
+        }
+        """)
+        plot_settings_button.js_on_click(plot_settings_cb)
+        h2 = row([x_lim_l, x_lim_u, scaler])
+    else:
+        plot_settings_button = Button(label="Plot settings", button_type="primary")
+        plot_settings_cb = CustomJS(args=dict(title=title, x_axis=x_axis, y_axis=y_axis, x_lim_l=x_lim_l, x_lim_u=x_lim_u), code="""
+        if (title.visible === false){
+            title.visible = true;
+            x_axis.visible = true;
+            y_axis.visible = true;
+            x_lim_l.visible = true;
+            x_lim_u.visible = true;
+        } else {
+            title.visible = false;
+            x_axis.visible = false;
+            y_axis.visible = false;
+            x_lim_l.visible = false;
+            x_lim_u.visible = false;
+        }
+        """)
+        plot_settings_button.js_on_click(plot_settings_cb)
+        h2 = row([x_lim_l, x_lim_u])
 
     h = row([y_axis, p], sizing_mode='stretch_both')
-    h2 = row([x_lim_l, x_lim_u])
     p = column(title, h, x_axis, h2, plot_settings_button, sizing_mode='stretch_both')
 
     if theme is not None:
@@ -92,8 +127,9 @@ def abs(abs_files, abs_labels, color, p: figure):
         y = df.iloc[:, 1]
         # normNum = 300
         yNorm = norm(y)
+
         plots.append([
-            p.line(x, yNorm, legend_label=abs_labels[i], line_width=2, line_color=colors[i])
+            p.line(x, yNorm, legend_label=abs_labels[i], line_width=2, line_color=colors[i]),
         ])
     return plots
 
@@ -158,3 +194,87 @@ def xrd(files, labels, color, p: figure):
         yNorm = norm(y)
         plots.append(p.line(x, yNorm, legend_label=labels[i], line_width=2.5, line_color=colors[i]))
     return x, y
+
+############ Photoluminesence Quantum Yield Plots ############
+
+def qy_xy(files):
+    for i, file in enumerate(files):
+        df = file2df(file)
+        x = df.iloc[:, 0] # gets first and second column for x and y data
+        y = df.iloc[:, 1]
+    return x, y
+
+# after x and y, we need to perform calculations on each file
+
+def qyCalc(Obs_2N, En_t, Obs_2, Blk, Obs_1, dilute) -> str:
+    '''
+    Takes the normalized emission peak of the concentrated sample (Obs) `Obs_2N`, the enhanced emission of the 
+    diluted peak `En_t`, the un-normalized emission peak of the (Obs) `Obs_2`, the blank integral `Blk`, the (Obs) excitation 
+    peak `Obs_1`, and the boolean indicating the Quantum yield calculation of just the dilute sample `dilute`
+
+    Args
+    -
+        `Obs_2N` Normalized observed emission integral.
+
+        `En_t` Enhanced emission integral.
+        
+        `Obs_2` Observed emission integral
+        
+        `Blk` Blank excitation integral
+        
+        `Obs_1` Observed excitation integral
+        
+        `dilute` Boolean for calculating the quantum yield of Observed `QY`
+
+    Returns
+    -
+        `Qy` The quantum yield of the sample.
+
+    Theory
+    -
+        QY = (QYobs) / 1 - a
+
+        a = 1 - int_ratio
+
+        int_ratio = int(Normalized Undiluted Emission)/int(Enhanced diluted emission)
+    '''
+
+    a = 1 - (Obs_2N / (En_t)) # Normalized emission of Concentrated sample, divided by the diluted scaled emission such that the red tails touch.
+    Qy_obs = Obs_2 / (Blk - Obs_1) # 'Normal' QY calculation. Accounting for the blank excitation
+    Qy = ((Qy_obs) / ((1 - a) + (a * Qy_obs))) * 100 # QY calculation found in paper
+    if dilute == True:
+        Qy = Qy_obs * 100
+        Qy = ph.format_float(Qy, 2) + '%'
+        return Qy
+    Qy = ph.format_float(Qy, 2) + '%'
+    return Qy
+
+def xy_qy(corx, cory, blkx, blky, sctx, scty, emix, emiy, p, threshold: float, blk_label, sct_label, emi_label):
+    cor_l = pchip_interpolate(corx,cory,blkx)
+    cor_u = pchip_interpolate(corx,cory,blkx)
+    blky = blky * cor_l * (blkx * 10 ** -9)
+    scty =  scty * cor_l * (sctx * 10 ** -9)
+    emiy = emiy * cor_u * (emix * 10 ** -9)
+    blk_int = integral(blkx, blky)
+    
+    for label in emi_label:
+        Obs_1 = ph.nth_integral(emix, emiy, p, label, nth=1, threshold=threshold)
+        Obs_2 = ph.nth_integral(emix, emiy, p, label, nth=2, threshold=threshold)
+        Obs_2N = ph.nth_integral(emix, emiy, p, label, nth=2, scale=1, plot=True, threshold=threshold)
+    
+    f = 1
+    dilute = False
+    for label in sct_label:
+        en_int, scaler = ph.nth_integral(sctx, scty, p, label + ' Enhanced', 
+                        nth=2, scale=f, color='green', plot=True, plot_type='enhanced', 
+                        threshold=threshold, qy_vals = (Obs_2N, Obs_2, blk_int, Obs_1, dilute))
+    return qyCalc(Obs_2N, en_int, Obs_2, blk_int, Obs_1, dilute=dilute), scaler
+
+def plqy(cor_file, blk_file, sct_file, emi_file, cor_label, blk_label, sct_label, emi_label, p, threshold: float = 0.01):
+    
+    corx, cory = qy_xy(cor_file)
+    blkx, blky = qy_xy(blk_file)
+    sctx, scty = qy_xy(sct_file)
+    emix, emiy = qy_xy(emi_file)
+
+    return xy_qy(corx, cory, blkx, blky, sctx, scty, emix, emiy, p, threshold, blk_label, sct_label, emi_label)
