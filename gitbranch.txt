@@ -10,6 +10,9 @@ git branch -D <branch_name>
 * Delete remote branch:
 git push origin --delete <branch_name>
 
+* Add branch to remote repository:
+git push origin <branch_name>
+
 Branch name convention:
 
 feature/: For new features or enhancements.
