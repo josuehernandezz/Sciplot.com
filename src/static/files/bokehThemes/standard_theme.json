@@ -1,0 +1,35 @@
+{
+    "attrs": {
+      "Plot": {
+        "background_fill_color": "white",
+        "border_fill_color": "white",
+        "outline_line_color": "#444444"
+      },
+      "Axis": {
+        "axis_line_color": null,
+        "axis_label_text_color": "#444444",
+        "axis_label_text_font": "Helvetica",
+        "major_label_text_color": "#444444",
+        "major_label_text_font": "Helvetica",
+        "major_tick_line_color": "#444444",
+        "minor_tick_line_color": "#444444"
+      },
+      "Grid": {
+        "grid_line_dash": [6, 4],
+        "grid_line_alpha": 0.3,
+        "grid_line_color": "#888888"
+      },
+      "Title": {
+        "text_color": "#444444",
+        "text_font": "Helvetica"
+      },
+      "Legend": {
+        "label_text_color": "#444444",
+        "label_text_font": "Helvetica",
+        "background_fill_color": "white",
+        "border_line_color": "#444444",
+        "inactive_fill_color": "white"
+      }
+    }
+  }
+  
