@@ -1,9 +1,16 @@
-creation and checkout into new branch:
-
+* Creation and checkout into new branch:
 git checkout -b <branch_name>
 
+* Regular Branch Deletion (Safe):
+git branch -d <branch_name>
 
-new branch naming convention:
+* Forced Branch Deletion (Unsafe):
+git branch -D <branch_name>
+
+* Delete remote branch:
+git push origin --delete <branch_name>
+
+Branch name convention:
 
 feature/: For new features or enhancements.
 bugfix/: For bug fixes.
@@ -24,4 +31,3 @@ docs/update-installation-guide
 test/add-unit-tests-for-api
 chore/cleanup-unused-code
 release/v1.0.1
-
