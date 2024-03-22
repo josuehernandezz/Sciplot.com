@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+
+<!-- ############################## Title ############################## -->
+{% block title %}{{ title }}{% endblock %}
+
+
+<!-- ############################## customStyles ############################## -->
+{% block customStyles%}
+<style>
+
+#uploadForm {
+  margin-top: 25px;
+}
+
+/* Style the input elements */
+#uploadForm input {
+  /* Add your desired styles here */
+  width: 60%;
+}
+#uploadForm p {
+  text-align: center;
+}
+
+/* Custom Select Styles */
+#id_theme {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  border: 2px solid var(--primary-color);
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 16px;
+  width: 200px; /* Adjust as needed */
+}
+
+#id_theme:focus {
+  outline: none;
+}
+
+/* Styling the options */
+#id_theme option {
+  background-color: #1e1e1e;
+  color: #fff;
+}
+
+/* Styling the selected option */
+#id_theme option:checked {
+  background-color: #007bff;
+}
+
+</style>
+{% endblock %}
+
+<!-- ############################## customJS ############################## -->
+{% block customJS %}
+
+<script>
+function clearInputFile(f) {
+if (f.value) {
+  try {
+    f.value = ''; // For IE11, latest Chrome/Firefox/Opera...
+  } catch (err) { }
+  if (f.value) { // For IE5 ~ IE10
+    var form = document.createElement('form');
+    var parentNode = f.parentNode;
+    var ref = f.nextSibling;
+    form.appendChild(f);
+    form.reset();
+    parentNode.insertBefore(f, ref);
+  }
+}
+}
+</script>
+{% if plot_type == "/pxrd" %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+  var clearFilesBtn = document.getElementById('clearFilesBtn');
+  var cardFilesInput = document.getElementById('id_card_files');
+  var xrdFilesInput = document.getElementById('id_xrd_files');
+
+  clearFilesBtn.addEventListener('click', function() {
+    clearInputFile(cardFilesInput);
+    clearInputFile(xrdFilesInput);
+  });
+});
+</script>
+{% elif plot_type == "/abspl" %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var clearFilesBtn = document.getElementById('clearFilesBtn');
+  var absFilesInput = document.getElementById('id_abs_files');
+  var plFilesInput = document.getElementById('id_pl_files');
+
+  clearFilesBtn.addEventListener('click', function() {
+    clearInputFile(absFilesInput);
+    clearInputFile(plFilesInput);
+  });
+});
+</script>
+{% elif plot_type == "/ftir" %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var clearFilesBtn = document.getElementById('clearFilesBtn');
+  var absFilesInput = document.getElementById('id_ftir_files');
+
+  clearFilesBtn.addEventListener('click', function() {
+    clearInputFile(absFilesInput);
+  });
+  });
+</script>
+{% elif plot_type == "/plqy" %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var clearFilesBtn = document.getElementById('clearFilesBtn');
+  var c = document.getElementById('id_cor_file');
+  var b = document.getElementById('id_blk_file');
+  var s = document.getElementById('id_sct_file');
+  var e = document.getElementById('id_emi_file');
+
+  clearFilesBtn.addEventListener('click', function() {
+    clearInputFile(c);
+    clearInputFile(b);
+    clearInputFile(s);
+    clearInputFile(e);
+  });
+});
+</script>
+{% endif %}
+
+{% endblock %}
+
+<!-- ############################## headerbutton ############################## -->
+{% block headerbutton %}
+<a class="header-button" href="/">Home</a>
+{% endblock %}
+
+<!-- ############################## column2 ############################## -->
+{% block content %}
+<h2 style="text-align: center;">
+  Upload
+</h2>
+<h3 style="text-align: center;">
+  {% if plot_type == "/abspl" %}
+    Absorbance and Photoluminescence
+  {% elif plot_type == "/pxrd" %}
+    Powder XRD
+  {% elif plot_type == "/ftir" %}
+    FTIR
+  {% elif plot_type == "/plqy" %}
+    Quantum Yield
+  {% else %}
+    {{ title }}
+  {% endif %}
+</h3>
+
+<form id="uploadForm" enctype="multipart/form-data" method="POST">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <div style="display: flex; justify-content: center; align-items: center;">
+    <div>
+      <button id="clearFilesBtn" class="btn"  type="button">Clear Files</button>
+      <button class="btn" type="submit">Upload</button>
+    </div>
+  </div>
+</form>
+
+{% endblock %}

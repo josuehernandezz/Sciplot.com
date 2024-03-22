@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+<!-- ############################## Title ############################## -->
+{% block title %}Sciplot{% endblock %}
+
+<!-- ############################## customStyles ############################## -->
+{% block customStyles%}
+<style>
+.figure-container {
+  /* border: 1px solid rgb(0, 162, 255); */
+  margin-top: 25px;
+  min-width: 400px;
+  max-width: 1000px;
+  margin: auto;
+  border: 1px solid var(--post-borderline);
+  border-radius: var(--border-radius);
+  resize: both;
+  overflow: visible;
+  display: block;
+  justify-content: center;
+  transition: 0.2s border;
+}
+.figure-container:hover {
+  border: 1px solid var(--post-hover-borderline);
+}
+.graph-title-container {
+  padding-top: 5px;
+}
+.graph-title {
+  border: 1px solid var(--post-borderline);
+  width: 150px;
+  display: flex;
+  justify-content: center;
+  margin: auto;
+  text-align: center;
+}
+.graph-title:hover {
+  border: 1px solid var(--post-hover-borderline);
+}
+.y-axis-graph-container {
+  /* border: 1px solid red; */
+  display: flex;
+}
+.graph-container {
+  /* border: 1px solid red; */
+  min-width: 200px;
+  min-height: 400px;
+  width: 100%;
+  height: 600px;
+  padding: 5px;
+  margin: 5px;
+  /* margin-left: 15px; */
+  /* padding-right: 15px; */
+}
+.graph {
+  border: 1px solid var(--post-borderline);
+  border-radius: 4px;
+  width: 100%;
+  height: 100%;
+}
+.graph:hover {
+  border: 1px solid var(--post-hover-borderline);
+}
+.y-axis-container {
+  /* border: 1px solid red; */
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+}
+.y-axis {
+  border: 1px solid var(--post-borderline);
+  text-align: center;
+  width: 150px;
+  transform: rotate(-90deg);
+}
+.y-axis:hover {
+  border: 1px solid var(--post-hover-borderline);
+}
+.x-axis-container {
+  display: block;
+  padding-bottom: 5px;
+}
+.x-axis {
+  border: 1px solid var(--post-borderline);
+  text-align: center;
+  display: flex;
+  margin: auto; 
+  width: 150px;
+}
+.x-axis:hover {
+  border: 1px solid var(--post-hover-borderline);
+}
+.home-content {
+    /* border: 1px solid var(--post-borderline); */
+    border-radius: 5px;
+    max-width: 800px;
+    /* margin-top: 200px; */
+    margin: auto;
+    padding: 20px;
+    text-align: center;
+}
+.home-images {
+    border: 1px solid var(--post-borderline);
+    display: block;
+    margin: auto;
+    width: 600px;
+    height: 400px;
+    border-radius: 10px;
+}
+.home-paragraph {
+    margin-bottom: 20px;
+}
+</style>
+<!-- <link rel="stylesheet" href="{% static 'css/style.css' %}"> -->
+{% endblock %}
+
+<!-- ############################## customJS ############################## -->
+{% block customJS %}
+{% endblock %}
+
+<!-- ############################## headerbutton ############################## -->
+<header>
+</header>
+{% block headerbutton %}
+{% endblock %}
+
+<!-- ############################## column2 ############################## -->
+{% block content %}
+<div class="rounded-md max-w-screen-md mx-auto pt-20 text-center">
+
+  <h1 class="font-mono mb-4 text-3xl md:text-4xl lg:text-5xl font-extrabold text-gray-900 dark:text-white">
+    Your Data
+    <span class="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
+      Visualized.
+    </span> 
+  </h1>
+  <p class="text-lg font-normal text-gray-500 lg:text-xl dark:text-gray-400">
+    Our platform is designed to provide users with an intuitive interface to upload data, 
+    and generate interactive plots that give insights within their data.
+  </p>
+
+  <p class="text-2xl text-cyan-500 dark:text-white mt-5">Absorbance & Photoluminesence Plot</p>
+  <div class="figure-container">
+    <div class="h-auto">
+    <div class="y-axis-graph-container">
+      <div class="graph-container">
+        <div class="graph">
+          {{ p2 | safe }}
+          {{ p1 | safe }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="text-2xl text-cyan-500 dark:text-white mt-5">Powder X-ray Diffractogram</p>
+  <div class="figure-container">
+    <div class="y-axis-graph-container">
+      <div class="graph-container">
+        <div class="graph">
+          {{ p4 | safe }}
+          {{ p3 | safe }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div> 
+{% endblock content %}

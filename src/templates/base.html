@@ -1,126 +1,49 @@
+<!-- templates/base.html -->
+
+{% load compress %}
 {% load static %}
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}TITLE{% endblock %}</title>
+        
+        <!-- Bokeh Plot links -->
+        <link href="https://cdn.pydata.org/bokeh/release/bokeh-3.1.1.min.css"  rel=”stylesheet” type=”text/css”>
+        <link href="https://cdn.pydata.org/bokeh/release/bokeh-widgets-3.1.1.min.css" rel=”stylesheet” type=”text/css”>
 
-<head>
-    <title>{% block title %}Sciplot{% endblock %}</title>
-    <!-- Include any CSS or JavaScript files -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- Bokeh Plot links -->
-    <link href="https://cdn.pydata.org/bokeh/release/bokeh-3.1.1.min.css"  rel=”stylesheet” type=”text/css”>
-    <link href="https://cdn.pydata.org/bokeh/release/bokeh-widgets-3.1.1.min.css" rel=”stylesheet” type=”text/css”>
-    
-    <script href="{% static 'js/theme_detector.js' %}"></script>
-    <script src="https://cdn.pydata.org/bokeh/release/bokeh-3.1.1.min.js"></script>
-    <script src="https://cdn.pydata.org/bokeh/release/bokeh-widgets-3.1.1.min.js"></script>
-    {{ script | safe }}
-    
-    <title>Sciplot</title>
+        <script src="https://cdn.pydata.org/bokeh/release/bokeh-3.1.1.min.js"></script>
+        <script src="https://cdn.pydata.org/bokeh/release/bokeh-widgets-3.1.1.min.js"></script>
+        {{ script | safe }}
 
-    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/inputs.css' %}">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
-{% block baseStyles%}
-<style>
-/* .logo-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.logo-text { 
-    margin-left: 10px;
-} */
-body {
-font-family: 'Open Sans', sans-serif;
-}
-.column {
-    float: left;
-    margin-bottom: 5%;
-}
-/* Left and right column */
-.column.side {
-    width: 15%;
-}
-/* Middle column */
-.column.middle {
-    width: 70%;
-    /* border: 1px solid red; */
-}
-/* Clear floats after the columns */
-.row::after {
-    content: "";
-    display: table;
-    clear: both;
-}
-/* Responsive layout - makes the three columns stack on top of each other instead of next to each other */
-@media screen and (max-width: 800px) {
-    .column.side, .column.middle {
-    width: 100%;
-    }
-}
-</style>
-{% endblock %}
+        {% compress css %}
+        <link rel="stylesheet" href="{% static 'css/output.css' %}">
+        {% endcompress %}
+        <script src="{% static 'js/theme_detector.js' %}"></script>
+        {% block customStyles%}{% endblock %}
+        {% block customJSHead %}{% endblock %}
+    </head>
+    <body class="bg-white dark:bg-gray-800 h-screen">
 
-{% block customStyles%}{% endblock %}
-{% block customJSHead %}{% endblock %}
+        <header>
+            {% include 'navbar.html' %}
+        </header>
 
-</head>
-
-<body>
-    
-    <header>
-        <div class="logo-container">
-            <!-- <img class="header-logo" src="{% static 'img/Absorbance & Photoluminesence.png'%}" oncontextmenu="return false;" alt="Logo"> -->
-            <!-- <h2 class="logo-text">Sciplot</h2> -->
+        <div class="container mx-auto mt-4">
+            {% block content %}
+            {% endblock content %}
         </div>
 
-        <div class="header-links">
-            <div class="link-div">
-                {% block headerbutton %}
-                {% endblock %}
-                <a href="/abspl" class="btn link">Abs/PL</a>
-                <a href="/pxrd" class="btn link">Powder XRD</a>
-                <a href="/ftir" class="btn link">FTIR</a>
-                <a href="/plqy" class="btn link">Quantum Yield</a>
-                <a href="/universal" class="btn link">Universal</a>
-            </div>
-        </div>
-    </header>
-    
-    <!-- Include the navigation bar -->
-    <nav>
-        <!-- Navigation links -->
-    </nav>
+        {% block pricing %}
+        {% endblock %}
 
-    <!-- Content section -->
-    <div class="container">
-
-        <div class="row">
-            <div class="column side">
-                {% block column1 %}{% endblock %}
-            </div>
-            <div class="column middle">
-                {% block column2 %}
-                {% endblock %}
-            </div>
-            <div class="column side">
-                {% block column3 %}{% endblock %}
-            </div>
-        </div>
-
-    </div>
-
-    <!-- Include the footer -->
-    <footer>
-        <!-- Footer content -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+        <script src="{% static 'js/dark_mode_toggle.js' %}"></script>
+        
         {% block footer %}
         {% endblock %}
-    </footer>
-
-    {% block customJS %}{% endblock %}
-
-</body>
+    </body>
 </html>
