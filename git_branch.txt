@@ -1,0 +1,27 @@
+creation and checkout into new branch:
+
+git checkout -b <branch_name>
+
+
+new branch naming convention:
+
+feature/: For new features or enhancements.
+bugfix/: For bug fixes.
+hotfix/: For critical fixes that need to be deployed quickly.
+refactor/: For refactoring code without changing its behavior.
+docs/: For documentation changes.
+test/: For adding or modifying tests.
+chore/: For maintenance tasks or miscellaneous changes.
+release/: For preparing a new release.
+
+examples:
+
+feature/user-authentication
+bugfix/fix-login-page-styling
+hotfix/critical-security-patch
+refactor/improve-error-handling
+docs/update-installation-guide
+test/add-unit-tests-for-api
+chore/cleanup-unused-code
+release/v1.0.1
+
