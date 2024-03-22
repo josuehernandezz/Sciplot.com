@@ -23,7 +23,7 @@ class UniversalForm(forms.Form):
                         required=False,
                         )
 
-    theme = forms.ChoiceField(required=True, choices=( 
+    theme = forms.ChoiceField(required=False, choices=( 
                         ("", "Standard"), 
                         ("dark", "Dark")))
 
