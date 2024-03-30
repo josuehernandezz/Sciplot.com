@@ -10,6 +10,8 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %}TITLE{% endblock %}</title>
+        <link rel="icon" type="image/png" href="{% static 'img/favicon.png'%}">
+        <link rel="apple-touch-icon" sizes="180x180" href="{% static 'img/favicon.png'%}">
         
         <!-- Bokeh Plot links -->
         <link href="https://cdn.pydata.org/bokeh/release/bokeh-3.1.1.min.css"  rel=”stylesheet” type=”text/css”>
@@ -26,13 +28,14 @@
         {% block customStyles%}{% endblock %}
         {% block customJSHead %}{% endblock %}
     </head>
-    <body class="bg-white dark:bg-gray-800 h-screen">
+    <body class="bg-lt-l dark:bg-dk-m">
+        <!-- h-screen w-full -->
 
         <header>
             {% include 'navbar.html' %}
         </header>
 
-        <div class="container mx-auto mt-4">
+        <div class="mx-auto mt-[50]">
             {% block content %}
             {% endblock content %}
         </div>
@@ -44,6 +47,9 @@
         <script src="{% static 'js/dark_mode_toggle.js' %}"></script>
         
         {% block footer %}
+        {% endblock %}
+
+        {% block customJSfooter %}
         {% endblock %}
     </body>
 </html>

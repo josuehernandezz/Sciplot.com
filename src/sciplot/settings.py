@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 from django.core.management.utils import get_random_secret_key
-
 import os
 
 # Initialise environment variables
@@ -30,10 +29,25 @@ SECRET_KEY = os.getenv("SECRET_KEY", get_random_secret_key())
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
-DEBUG = os.getenv("DEBUG", "False") == "True"
+# DEBUG = os.getenv("DEBUG", "False") == "True"
+DEBUG = "True"
+
+# Watching for file changes with StatReloader
+# Performing system checks...
+
+# System check identified no issues (0 silenced).
+# March 23, 2024 - 22:42:50
+# Django version 4.1.9, using settings 'sciplot.settings'
+# Starting development server at http://127.0.0.1:8000/
+# Quit the server with CONTROL-C.
+
+
+# http://127.0.0.1:8000
+# 127.0.0.1:8000
 
 ALLOWED_HOSTS = [
     'sciplot.com',
+    'localhost',
     '127.0.0.1',
     'whale-app-oyqao.ondigitalocean.app',
     'goldfish-app-wkcqm.ondigitalocean.app'

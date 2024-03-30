@@ -6,27 +6,6 @@ from django.core.validators import FileExtensionValidator
 from django import forms
 from django.core.exceptions import ValidationError
 
-class UniversalForm(forms.Form):
-    files = MultiFileField(min_num=1, max_num=10, 
-                               label="Files",
-                               )
-        
-    labels = forms.CharField(
-                        widget=forms.TextInput(
-                            attrs={'placeholder': 'Label 1, Label 2 ...'}),
-                        label="Labels",
-                        required=False
-                        ) 
-
-    title = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Figure Title'}),
-                        label='Figure Title',
-                        required=False,
-                        )
-
-    theme = forms.ChoiceField(required=False, choices=( 
-                        ("", "Standard"), 
-                        ("dark", "Dark")))
-
 class AbsForm(forms.Form):
     abs_files = MultiFileField(min_num=1, max_num=10, 
                                label="Abs Files",
@@ -55,6 +34,27 @@ class AbsForm(forms.Form):
         required=False)
 
     title = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Abs & PL'}),
+                        label='Figure Title',
+                        required=False,
+                        )
+
+    theme = forms.ChoiceField(required=False, choices=( 
+                        ("", "Standard"), 
+                        ("dark", "Dark")))
+
+class UniversalForm(forms.Form):
+    files = MultiFileField(min_num=1, max_num=10, 
+                               label="Files",
+                               )
+        
+    labels = forms.CharField(
+                        widget=forms.TextInput(
+                            attrs={'placeholder': 'Label 1, Label 2 ...'}),
+                        label="Labels",
+                        required=False
+                        ) 
+
+    title = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Figure Title'}),
                         label='Figure Title',
                         required=False,
                         )

@@ -112,27 +112,50 @@
 .home-paragraph {
     margin-bottom: 20px;
 }
+.jh-bg-img {
+    background-image: url("{% static 'img/bg_lt_1.jpg' %}");
+  }
 </style>
 {% endblock %}
 
 <!-- ############################## customJS ############################## -->
 {% block customJS %}
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 {% endblock %}
 
 <!-- ############################## Content ############################## -->
 {% block content %}
-<div class="rounded-md max-w-screen-md mx-auto pt-20 text-center">
+<div>
+  <!-- class="rounded-md max-w-screen-md mx-auto pt-20 text-center" -->
 
-  <h1 class="font-mono mb-4 text-3xl md:text-4xl lg:text-5xl font-extrabold text-gray-900 dark:text-white">
-    Your Data
-    <span class="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
-      Visualized.
-    </span> 
-  </h1>
+  <div class="mt-20">
+    <h1 class="mb-4 text-black dark:text-white text-4xl font-extrabold tracking-tight leading-none md:text-5xl lg:text-6xl">
+      Your Data
+      <span id="element" class="text-transparent bg-clip-text bg-gradient-to-r to-accent-l from-accent-r">
+      </span> 
+    </h1>
+  </div>
+
   <p class="text-lg font-normal text-gray-500 lg:text-xl dark:text-gray-400">
-    Our platform is designed to provide users with an intuitive interface to upload data, 
-    and generate interactive plots that give insights within their data.
+    Here at Flowbite we focus on markets where technology, innovation, and capital can 
+    unlock long-term value and drive economic growth.
   </p>
+
+
+  <p class="text-lg font-normal text-gray-500 lg:text-xl dark:text-gray-400">
+    Our platform is designed to provide users with an intuitive interface for uploading data, 
+    and generate interactive plots that give insights into their data.
+
+    Our platform is meticulously crafted to offer users a seamless experience when uploading their data. We understand the importance of simplicity and efficiency, which is why our interface is intuitive and user-friendly. With just a few clicks, users can effortlessly upload their datasets, regardless of format or size.
+
+    Once the data is uploaded, our platform goes to work, leveraging cutting-edge algorithms and visualization techniques to generate interactive plots. These plots are more than just static visualizations; they're dynamic tools that empower users to explore their data in depth. With features such as zoom, pan, and filter, users can interact with the plots, uncovering hidden patterns, trends, and correlations that may have otherwise gone unnoticed.
+
+    But our commitment doesn't stop there. We believe in democratizing data analysis, which is why our platform provides users with actionable insights derived from their data. Whether it's identifying outliers, suggesting data transformations, or recommending statistical tests, our platform equips users with the knowledge they need to make informed decisions.
+
+    In essence, our platform isn't just about data visualization; it's about empowerment. It's about giving users the tools they need to unlock the full potential of their data and drive meaningful outcomes. With our intuitive interface and interactive plots, users can transform raw data into actionable insights, empowering them to make informed decisions and drive success.
+  </p>
+  
+  <hr class="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-10 dark:bg-gray-700">
 
   <p class="mt-4 text-transparent text-3xl bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
     Absorbance & Photoluminesence Plot
@@ -149,23 +172,37 @@
     </div>
   </div>
 
+  <hr class="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-10 dark:bg-gray-700">
+
   <p class="text-transparent text-3xl bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
     Powder X-ray Diffractogram
   </p>
-  <div class="figure-container">
-    <div class="y-axis-graph-container">
-      <div class="graph-container">
-        <div class="graph">
-          {{ p4 | safe }}
-          {{ p3 | safe }}
+    <div class="figure-container">
+      <div class="y-axis-graph-container">
+        <div class="graph-container">
+          <div class="graph">
+            {{ p4 | safe }}
+            {{ p3 | safe }}
+          </div>
         </div>
       </div>
     </div>
   </div>
-
 </div> 
 {% endblock content %}
 
 {% block footer %}
 {% include 'footer.html' %}
+{% endblock %}
+
+{% block customJSfooter %}
+<script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
+<script>
+  var title = new Typed('#element', {
+    strings: ['Rendered', 'Visualized', 'Reimagined'],
+    typeSpeed: 100,
+    backSpeed: 100,
+    loop: true,
+  });
+</script>
 {% endblock %}

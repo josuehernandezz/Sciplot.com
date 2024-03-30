@@ -27,28 +27,29 @@ def home(request):
     
     vars = {'p1': p[0], 'p2': p[1], 
             'p3': p2[0], 'p4': p2[1]}
-    return render(request, 'pages/home.html', vars)
+    return render(request, 'pages/home2.html', vars)
 
 def abspl(request):
     if request.method == 'POST':
         form = AbsForm(request.POST, request.FILES)
         if form.is_valid():
-            # Abs file handle
-            abs_files = request.FILES.getlist('abs_files')
-            input_abs_labels = form.cleaned_data.get('abs_labels')
-            abs_labels = input_abs_labels.split(',') if input_abs_labels else [f'Abs {i+1}' for i in range(len(abs_files))]
+            print('form', form)
+            # # Abs file handle
+            # abs_files = request.FILES.getlist('abs_files')
+            # input_abs_labels = form.cleaned_data.get('abs_labels')
+            # abs_labels = input_abs_labels.split(',') if input_abs_labels else [f'Abs {i+1}' for i in range(len(abs_files))]
 
-            # PL file handle
-            pl_files = request.FILES.getlist('pl_files')
-            input_pl_labels = form.cleaned_data.get('pl_labels')
-            pl_labels = input_pl_labels.split(',') if input_pl_labels else [f'PL {i+1}' for i in range(len(pl_files))]
+            # # PL file handle
+            # pl_files = request.FILES.getlist('pl_files')
+            # input_pl_labels = form.cleaned_data.get('pl_labels')
+            # pl_labels = input_pl_labels.split(',') if input_pl_labels else [f'PL {i+1}' for i in range(len(pl_files))]
 
-            norm_num_abs = form.cleaned_data.get('norm_num_abs') or None
-            title = form.cleaned_data.get('title') or 'Absorbance & Photoluminescence'
-            theme = form.cleaned_data.get('theme')
+            # norm_num_abs = form.cleaned_data.get('norm_num_abs') or None
+            # title = form.cleaned_data.get('title') or 'Absorbance & Photoluminescence'
+            # theme = form.cleaned_data.get('theme')
 
-            p = bpl.abspl_plotter(abs_files, pl_files, abs_labels, pl_labels, norm_num_abs, title=title, theme=theme)
-            vars = {'p1': p[0], 'p2': p[1], 'title': title}
+            # p = bpl.abspl_plotter(abs_files, pl_files, abs_labels, pl_labels, norm_num_abs, title=title, theme=theme)
+            # vars = {'p1': p[0], 'p2': p[1], 'title': title}
             return render(request, 'pages/plot.html', vars)
         else:
             vars = {'form': form}
