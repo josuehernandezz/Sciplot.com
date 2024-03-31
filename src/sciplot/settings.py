@@ -28,9 +28,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY", get_random_secret_key())
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
-# DEBUG = os.getenv("DEBUG", "False") == "True"
 DEBUG = "True"
+# DEBUG = os.getenv("DEBUG", "False") == "True"
 
 # Watching for file changes with StatReloader
 # Performing system checks...
@@ -46,13 +45,13 @@ DEBUG = "True"
 # 127.0.0.1:8000
 
 ALLOWED_HOSTS = [
+    '192.168.1.26',
     'sciplot.com',
     'localhost',
     '127.0.0.1',
     'whale-app-oyqao.ondigitalocean.app',
     'goldfish-app-wkcqm.ondigitalocean.app'
 ]
-
 
 # Application definition
 
@@ -144,18 +143,24 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = "static/"
-STATIC_ROOT = BASE_DIR / "staticfiles"
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
-]
+# Had to make a copy of Django admin static files from
+# venv/lib/python3.11/site-packages/django/contrib/admin/static/admin
+
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "static_cdn"
+STATICFILES_DIRS = [BASE_DIR / "static"]
+
+# STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+# print('static url', STATIC_URL)
+# print('static root url', STATIC_ROOT)
 
 COMPRESS_ROOT = BASE_DIR / 'static'
-
 COMPRESS_ENABLED = True
-
-STATICFILES_FINDERS = ('compressor.finders.CompressorFinder',)
+STATICFILES_FINDERS = ('compressor.finders.CompressorFinder',
+    #    NEEDED IN ORDER FOR DJANGO ADMIN TO WORK
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder', 
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    )
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

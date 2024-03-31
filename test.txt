@@ -24,7 +24,6 @@
         {% compress css %}
         <link rel="stylesheet" href="{% static 'css/output.css' %}">
         {% endcompress %}
-
         <script src="{% static 'js/theme_detector.js' %}"></script>
         {% block customStyles%}{% endblock %}
         {% block customJSHead %}{% endblock %}
