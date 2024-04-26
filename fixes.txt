@@ -1,0 +1,7 @@
+updates
+
+Fix navbar transparency - DONE
+
+Fix upload.html css look
+
+Fix home.html to display plots

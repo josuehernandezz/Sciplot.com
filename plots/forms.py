@@ -29,7 +29,7 @@ class UniversalForm(forms.Form):
 
 class AbsForm(forms.Form):
     abs_files = MultiFileField(min_num=1, max_num=10, 
-                               label="Abs Files",
+                               label="Abs Files", 
                                )
         
     abs_labels = forms.CharField(
