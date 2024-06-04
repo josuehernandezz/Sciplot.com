@@ -51,7 +51,7 @@ def plotSettings(p: figure, x_label, y_label,
         value_l = low
         value_u = high
     else:
-        low = 450
+        low = 350
         high = 4000
         step = 5
         value_l = low

@@ -6,7 +6,7 @@ def file2df(file):
     try:
         lines = grab_lines(file)
         data = grab_nums(lines)
-        print(data, 'data')
+        # print(data, 'data')
         df = nums2df(data)
         return df
     except Exception:

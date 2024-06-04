@@ -17,7 +17,7 @@ def home(request):
     card_label = 'Orthorhombic'
     xrd_label = 'XRD 1'
 
-    theme = 'dark' 
+    theme = 'standard' 
 
     p = bpl.abspl_plotter([abs_path], [pl_path], [abs_label], [pl_label], theme=theme)
     p2 = bpl.xrd_plotter([card_path], [xrd_path], [card_label], [xrd_label], theme=theme)
