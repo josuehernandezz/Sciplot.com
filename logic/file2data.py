@@ -5,7 +5,7 @@ import io
 def file2df(file):
     try:
         lines = grab_lines(file)
-        print(lines, 'lines')
+        print('line', lines[0])
         data = grab_nums(lines)
         df = nums2df(data)
         return df

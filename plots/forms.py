@@ -191,3 +191,21 @@ class PLQYForm(forms.Form):
     theme = forms.ChoiceField(required=False, choices=( 
                         ("", "Standard"), 
                         ("dark", "Dark")))
+
+# Correction 
+# manufacturer file
+# raw data file
+
+class CorrectionGeneratorForm(forms.Form):
+    man_file = MultiFileField(min_num=0, max_num=1, 
+                               label="Manufacturer's File",
+                               )
+    
+    det_file = MultiFileField(min_num=0, max_num=1, 
+                               label="Detector Response File",
+                               )
+
+    title = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Correction Factor'}),
+                        label='File Name',
+                        required=False,
+                        )

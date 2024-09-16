@@ -1,7 +1,14 @@
 from django.shortcuts import render, redirect
-from .forms import AbsForm, XrdForm, PLQYForm, FTIRForm, UniversalForm
+from .forms import AbsForm, XrdForm, PLQYForm, FTIRForm, UniversalForm, CorrectionGeneratorForm
 from django.http import JsonResponse
+from django.http import HttpResponse
+
+import numpy as np
+import io
+
+# custom
 from logic import bokehPlots as bpl
+from logic.correction_generator import correction_maker
 # Create your views here.
 
 def home(request):
@@ -171,5 +178,36 @@ def universal(request):
     else:
         form = UniversalForm()
         title = 'Universal'
+        vars = {'form': form, 'title': title}
+        return render(request, 'upload.html', vars)
+
+def correction_generator(request):
+    if request.method == 'POST':
+        form = CorrectionGeneratorForm(request.POST, request.FILES)
+        if form.is_valid():
+            # file handle
+            man_file = request.FILES.getlist('man_file')
+            det_file = request.FILES.getlist('det_file')
+            title = form.cleaned_data.get('title') or 'correction_factor.txt'
+
+            # Your logic to calculate the correction factor data
+            data = correction_maker(man_file[0], det_file[0])
+
+            # Create an in-memory text stream
+            buffer = io.StringIO()
+            np.savetxt(buffer, data, delimiter=',')
+            buffer.seek(0)  # Rewind the buffer to the beginning
+
+            # Create an HTTP response with the file content
+            response = HttpResponse(buffer, content_type='text/plain')
+            response['Content-Disposition'] = 'attachment; filename=' + title
+            return response
+
+        else:
+            vars = {'form': form}
+            return render(request, 'upload.html', vars)
+    else:
+        form = CorrectionGeneratorForm()
+        title = 'Correction'
         vars = {'form': form, 'title': title}
         return render(request, 'upload.html', vars)
