@@ -58,7 +58,7 @@ def webhook():
         # Get the raw payload data
         payload = request.data
         print('payload request.get')
-        print(request.get('ref'))
+        print(request.data.get('ref'))
 
         # Verify the webhook signature using the new verify_signature function
         try:
