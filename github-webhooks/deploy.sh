@@ -23,3 +23,4 @@ echo "Starting new container..."
 docker run --env-file /home/josue/sciplot/.env -d --name sciplot -p 8000:8000 sciplot || { echo "Docker run failed"; exit 1; }
 
 echo "Deployment successful! The new container is now running."
+
