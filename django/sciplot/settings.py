@@ -38,7 +38,8 @@ ALLOWED_HOSTS = [
     'sciplot.com',
     '127.0.0.1',
     'whale-app-oyqao.ondigitalocean.app',
-    'goldfish-app-wkcqm.ondigitalocean.app'
+    'goldfish-app-wkcqm.ondigitalocean.app',
+    '192.168.4.83',
 ]
 
 
