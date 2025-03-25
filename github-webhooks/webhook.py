@@ -8,17 +8,39 @@ app = Flask(__name__)
 
 GITHUB_SECRET = 'your-github-webhook-secret'  # The secret you set in GitHub
 
+# def verify_signature(payload_body, signature_header, secret_token):
+#     """Verify the GitHub webhook signature to ensure it's from GitHub."""
+#     if not signature_header:
+#         raise ValueError("Signature header is missing!")
+
+#     # Create the expected signature using HMAC and SHA256
+#     hash_object = hmac.new(secret_token.encode('utf-8'), msg=payload_body, digestmod=hashlib.sha256)
+#     expected_signature = "sha256=" + hash_object.hexdigest()
+
+#     # Compare the computed signature with the received signature
+#     if not hmac.compare_digest(expected_signature, signature_header):
+#         raise ValueError("Request signatures didn't match!")
+
+#     return True
+
 def verify_signature(payload_body, signature_header, secret_token):
     """Verify the GitHub webhook signature to ensure it's from GitHub."""
     if not signature_header:
         raise ValueError("Signature header is missing!")
 
+    # Extract the 'sha256=' part of the signature header to get only the hash value
+    if not signature_header.startswith("sha256="):
+        raise ValueError("Invalid signature prefix in header!")
+
+    # Get the actual hash value from the signature header (remove 'sha256=')
+    signature_hash = signature_header[len("sha256="):]
+
     # Create the expected signature using HMAC and SHA256
     hash_object = hmac.new(secret_token.encode('utf-8'), msg=payload_body, digestmod=hashlib.sha256)
-    expected_signature = "sha256=" + hash_object.hexdigest()
+    expected_signature = hash_object.hexdigest()
 
-    # Compare the computed signature with the received signature
-    if not hmac.compare_digest(expected_signature, signature_header):
+    # Compare the computed signature with the received signature hash
+    if not hmac.compare_digest(expected_signature, signature_hash):
         raise ValueError("Request signatures didn't match!")
 
     return True
