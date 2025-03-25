@@ -46,10 +46,6 @@ def verify_signature(payload, signature):
 #     except Exception as e:
 #         return jsonify({"error": str(e)}), 500
 
-# if __name__ == '__main__':
-#     app.run(host='0.0.0.0', port=9000)  # Run on port 9000
-
-
 @app.route('/webhook', methods=['POST'])
 def webhook():
     try:
@@ -81,3 +77,6 @@ def webhook():
         return jsonify({"message": "No action taken"}), 400
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=9000)  # Run on port 9000
