@@ -1,8 +1,8 @@
 from flask import Flask, request, jsonify
+import json
 import subprocess
 import hmac
 import hashlib
-import os
 
 app = Flask(__name__)
 
@@ -57,15 +57,22 @@ def webhook():
 
         # Get the raw payload data
         payload = request.data
-        print('payload request.get')
-        print(request.data.get('ref'))
-
 
         # Verify the webhook signature using the new verify_signature function
         try:
             verify_signature(payload, signature, GITHUB_SECRET)
         except ValueError as e:
             return jsonify({"error": str(e)}), 403
+        
+
+        # Decode the payload from raw byte string to a Python dictionary
+        payload = json.loads(request.data.decode('utf-8'))  # Decoding byte string to a dict
+
+        print(payload)  # Print the full decoded payload
+        print(f"ref: {payload.get('ref')}")  # Access specific data, like 'ref'
+
+        if not signature:
+            return jsonify({"error": "Missing signature"}), 400
 
         if request.get('ref') == 'refs/heads/main' and payload.get('repository', {}).get('name') == 'sciplot':  
             # Ensure it's the 'main' branch and the correct repository
