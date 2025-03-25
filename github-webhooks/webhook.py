@@ -60,7 +60,6 @@ def webhook():
         print('payload request.get')
         print(request.get('ref'))
 
-
         # Verify the webhook signature using the new verify_signature function
         try:
             verify_signature(payload, signature, GITHUB_SECRET)
