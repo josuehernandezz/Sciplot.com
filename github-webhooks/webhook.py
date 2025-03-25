@@ -74,6 +74,7 @@ def webhook():
         print(f"ref: {ref}")
         print(f"Repository: {repo_name}")
 
+
         # Check if the push was to the 'main' branch and the correct repository
         if ref == 'refs/heads/main' and repo_name == 'Sciplot.com':
             subprocess.run(["/home/josue/github-webhooks/deploy.sh"], check=True)
