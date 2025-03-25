@@ -51,31 +51,32 @@ def webhook():
         # Log all headers to inspect what’s being passed through
         print("Headers: ", request.headers)
 
+        print("Pringing the header xhub signature-256", request.headers.get('X-Hub-Signature-256'))
         # Retrieve the signature from the headers
         signature = request.headers.get('X-Hub-Signature-256')
-        print("Signature:", signature)
-        if not signature:
-            return jsonify({"error": "Missing signature"}), 400
+        # print("Signature:", signature)
+        # if not signature:
+        #     return jsonify({"error": "Missing signature"}), 400
 
-        # Get the raw payload data
-        payload = request.data
+        # # Get the raw payload data
+        # payload = request.data
 
-        # Verify the webhook signature using the new verify_signature function
-        try:
-            verify_signature(payload, signature, GITHUB_SECRET)
-        except ValueError as e:
-            return jsonify({"error": str(e)}), 403
+        # # Verify the webhook signature using the new verify_signature function
+        # try:
+        #     verify_signature(payload, signature, GITHUB_SECRET)
+        # except ValueError as e:
+        #     return jsonify({"error": str(e)}), 403
 
-        data = request.get_json(force=True)  # Explicitly parse JSON
-        if not data:
-            return jsonify({"error": "No JSON received"}), 400
+        # data = request.get_json(force=True)  # Explicitly parse JSON
+        # if not data:
+        #     return jsonify({"error": "No JSON received"}), 400
 
-        if data.get('ref') == 'refs/heads/main' and data.get('repository', {}).get('name') == 'sciplot':  
-            # Ensure it's the 'main' branch and the correct repository
-            subprocess.run(["/home/josue/github-webhooks/deploy.sh"], check=True)
-            return jsonify({"message": "Deployment triggered"}), 200
+        # if data.get('ref') == 'refs/heads/main' and data.get('repository', {}).get('name') == 'sciplot':  
+        #     # Ensure it's the 'main' branch and the correct repository
+        #     subprocess.run(["/home/josue/github-webhooks/deploy.sh"], check=True)
+        #     return jsonify({"message": "Deployment triggered"}), 200
 
-        return jsonify({"message": "No action taken"}), 400
+        # return jsonify({"message": "No action taken"}), 400
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
