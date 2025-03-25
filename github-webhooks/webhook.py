@@ -65,23 +65,25 @@ def webhook():
             return jsonify({"error": str(e)}), 403
         
         # Decode the payload from raw byte string to a Python dictionary
-        payload = json.loads(request.data.decode('utf-8'))  # Decoding byte string to a dict
+        payload_data = json.loads(request.data.decode('utf-8'))  # Decoding byte string to a dict
 
-        print(payload)  # Print the full decoded payload
-        print(f"ref: {payload.get('ref')}")  # Access specific data, like 'ref'
+        # Extract relevant data from the payload
+        ref = payload_data.get('ref')
+        repo_name = payload_data.get('repository', {}).get('name')
 
+        print(f"ref: {ref}")
+        print(f"Repository: {repo_name}")
 
-        if not signature:
-            return jsonify({"error": "Missing signature"}), 400
-
-        if payload.get('ref') == 'refs/heads/main' and payload.get('repository', {}).get('name') == 'sciplot':  
-            # Ensure it's the 'main' branch and the correct repository
+        # Check if the push was to the 'main' branch and the correct repository
+        if ref == 'refs/heads/main' and repo_name == 'Sciplot.com':
             subprocess.run(["/home/josue/github-webhooks/deploy.sh"], check=True)
             return jsonify({"message": "Deployment triggered"}), 200
 
         return jsonify({"message": "No action taken"}), 400
 
     except Exception as e:
+        print("The error is:")
+        print(e)
         return jsonify({"error": str(e)}), 500
     
 if __name__ == '__main__':
