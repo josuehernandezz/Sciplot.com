@@ -36,9 +36,9 @@ def verify_signature(payload_body, signature_header, secret_token):
 def webhook():
     try:
         signature = request.headers.get('X-Hub-Signature-256')
-        print(request.headers)
-        print("Payload: ")
-        print(request.data)  # This is where you can access the raw payload
+        # print(request.headers)
+        # print("Payload: ")
+        # print(request.data)  # This is where you can access the raw payload
         if not signature:
             return jsonify({"error": "Missing signature"}), 400
 
@@ -60,7 +60,6 @@ def webhook():
 
         print(f"ref: {ref}")
         print(f"Repository: {repo_name}")
-
 
         # Check if the push was to the 'main' branch and the correct repository
         if ref == 'refs/heads/main' and repo_name == repository_name:
