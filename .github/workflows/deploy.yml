@@ -3,7 +3,7 @@ name: Deploy to Server
 on:
   push:
     branches:
-      - main  # Adjust to your branch name
+      - main # Adjust to your branch name
 
 jobs:
   deploy:
@@ -22,4 +22,4 @@ jobs:
             sudo docker build -t sciplot .
             sudo docker stop sciplot || true
             sudo docker rm sciplot || true
-            sudo docker run -d --name sciplot -p 8000:8000 sciplot
+            sudo docker run -d --name sciplot -p 8000:8000 -v ~/sciplot:/app sciplot
