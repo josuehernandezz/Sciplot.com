@@ -31,7 +31,7 @@ if [ $START_STATUS -ne 0 ]; then
 fi
 
 # If the new container starts successfully, stop the old one
-echo "Stopping old container..."
-docker stop sciplot && docker rm sciplot
+# echo "Stopping old container..."
+# docker stop sciplot && docker rm sciplot
 
 echo "Deployment successful! The new container is now running."
