@@ -64,7 +64,6 @@ def webhook():
         except ValueError as e:
             return jsonify({"error": str(e)}), 403
         
-
         # Decode the payload from raw byte string to a Python dictionary
         payload = json.loads(request.data.decode('utf-8'))  # Decoding byte string to a dict
 
