@@ -18,6 +18,9 @@ else
     echo "Stopping and removing existing container named 'sciplot'..."
     docker stop sciplot || { echo "Failed to stop existing container"; exit 1; }
     docker rm sciplot || { echo "Failed to remove existing container"; exit 1; }
+
+    echo "Starting new container..."
+    docker run --env-file /home/josue/sciplot/.env -d --name sciplot -p 8000:8000 sciplot || { echo "Docker run failed"; exit 1; }
 fi
 
 echo "Deployment successful! The new container is now running."
