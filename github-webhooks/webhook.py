@@ -54,15 +54,14 @@ def webhook():
 
         # Get the raw payload data
         payload = request.data
-        print('payload refre', payload.get('ref'))
+        print('payload request.get', request.get('ref'))
         # Verify the webhook signature using the new verify_signature function
         try:
             verify_signature(payload, signature, GITHUB_SECRET)
         except ValueError as e:
             return jsonify({"error": str(e)}), 403
 
-
-        if payload.get('ref') == 'refs/heads/main' and payload.get('repository', {}).get('name') == 'sciplot':  
+        if request.get('ref') == 'refs/heads/main' and payload.get('repository', {}).get('name') == 'sciplot':  
             # Ensure it's the 'main' branch and the correct repository
             subprocess.run(["/home/josue/github-webhooks/deploy.sh"], check=True)
             return jsonify({"message": "Deployment triggered"}), 200
