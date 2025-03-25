@@ -11,7 +11,7 @@ docker build -t sciplot . || { echo "Docker build failed"; exit 1; }
 # Check if a container named 'sciplot' is already running
 existing_container=$(docker ps -q -f name=sciplot)
 
-if [ ! -z "$existing_container" ]; then
+if [ -z "$existing_container" ]; then
     echo "Stopping and removing existing container named 'sciplot'..."
     docker stop sciplot || { echo "Failed to stop existing container"; exit 1; }
     docker rm sciplot || { echo "Failed to remove existing container"; exit 1; }
