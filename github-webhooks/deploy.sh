@@ -9,7 +9,7 @@ docker build -t sciplot . || { echo "Docker build failed"; exit 1; }
 
 echo "Starting new container..."
 # Start the new container but don't detach yet, so we can check if it fails immediately
-docker run -d --name sciplot -p 8000:8000 sciplot
+docker run --env-file /home/josue/sciplot/.env -d --name sciplot -p 8000:8000 sciplot
 START_STATUS=$?
 
 if [ $START_STATUS -ne 0 ]; then
@@ -25,11 +25,13 @@ if [ $START_STATUS -ne 0 ]; then
     echo "- Make sure the ports are not being blocked by a firewall or other process."
 
     echo "Leaving old container running. Please fix the issue and try again."
+    echo "Try running:"
+    echo "docker logs sciplot"
     exit 1
 fi
 
 # If the new container starts successfully, stop the old one
 echo "Stopping old container..."
-docker stop sciplot # && docker rm sciplot
+docker stop sciplot && docker rm sciplot
 
 echo "Deployment successful! The new container is now running."
