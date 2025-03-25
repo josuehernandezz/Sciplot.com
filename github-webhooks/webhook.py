@@ -61,6 +61,7 @@ def webhook():
         print(f"ref: {ref}")
         print(f"Repository: {repo_name}")
 
+
         # Check if the push was to the 'main' branch and the correct repository
         if ref == 'refs/heads/main' and repo_name == repository_name:
             subprocess.run([script_path], check=True)
