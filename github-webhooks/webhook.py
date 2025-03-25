@@ -38,6 +38,7 @@ def verify_signature(payload_body, signature_header, secret_token):
     # Create the expected signature using HMAC and SHA256
     hash_object = hmac.new(secret_token.encode('utf-8'), msg=payload_body, digestmod=hashlib.sha256)
     expected_signature = hash_object.hexdigest()
+    print("THE EXPECCTED CODE SIGNATURE IS THIS", expected_signature)
 
     # Compare the computed signature with the received signature hash
     if not hmac.compare_digest(expected_signature, signature_hash):
