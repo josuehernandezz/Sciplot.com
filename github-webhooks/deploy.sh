@@ -33,4 +33,3 @@ echo "Stopping old container..."
 docker stop sciplot && docker rm sciplot
 
 echo "Deployment successful! The new container is now running."
-
