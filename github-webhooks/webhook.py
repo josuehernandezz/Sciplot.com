@@ -38,7 +38,6 @@ def verify_signature(payload_body, signature_header, secret_token):
     # Create the expected signature using HMAC and SHA256
     hash_object = hmac.new(secret_token.encode('utf-8'), msg=payload_body, digestmod=hashlib.sha256)
     expected_signature = hash_object.hexdigest()
-    print("THE EXPECCTED CODE SIGNATURE IS THIS", expected_signature)
 
     # Compare the computed signature with the received signature hash
     if not hmac.compare_digest(expected_signature, signature_hash):
@@ -49,19 +48,12 @@ def verify_signature(payload_body, signature_header, secret_token):
 @app.route('/webhook', methods=['POST'])
 def webhook():
     try:
-        # Log all headers to inspect what’s being passed through
-        print("Headers: ", request.headers)
-
-        print("Pringing the header xhub signature-256", request.headers.get('X-Hub-Signature-256'))
-        # Retrieve the signature from the headers
         signature = request.headers.get('X-Hub-Signature-256')
-        print("Signature:", signature)
         if not signature:
             return jsonify({"error": "Missing signature"}), 400
 
         # Get the raw payload data
         payload = request.data
-        print("THE PAYLOAD IS: payload", payload)
 
         # Verify the webhook signature using the new verify_signature function
         try:
@@ -69,7 +61,7 @@ def webhook():
         except ValueError as e:
             return jsonify({"error": str(e)}), 403
 
-        data = request.get_json(force=True)  # Explicitly parse JSON
+        data = request.data(force=True)  # Explicitly parse JSON
         if not data:
             return jsonify({"error": "No JSON received"}), 400
 
