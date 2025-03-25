@@ -10,7 +10,9 @@ GITHUB_SECRET = 'your-github-webhook-secret'  # The secret you set in GitHub
 
 def verify_signature(payload, signature):
     """Verify the GitHub webhook signature to ensure it's from GitHub."""
-    computed_signature = 'sha256=' + hmac.new(
+    # Remove the 'sha256=' part of the signature received from GitHub
+    signature = signature.split('=')[1]  # This extracts the actual hash part
+    computed_signature = hmac.new(
         bytes(GITHUB_SECRET, 'utf-8'),
         msg=payload,
         digestmod=hashlib.sha256
