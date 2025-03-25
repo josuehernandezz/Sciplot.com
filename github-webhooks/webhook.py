@@ -49,13 +49,15 @@ def verify_signature(payload_body, signature_header, secret_token):
 def webhook():
     try:
         signature = request.headers.get('X-Hub-Signature-256')
+        print(request.headers)
         if not signature:
             return jsonify({"error": "Missing signature"}), 400
 
         # Get the raw payload data
         payload = request.data
-        print('payload request.get', request.get('ref'))
-        
+        print('payload request.get')
+        print(request.get('ref'))
+
         # Verify the webhook signature using the new verify_signature function
         try:
             verify_signature(payload, signature, GITHUB_SECRET)
