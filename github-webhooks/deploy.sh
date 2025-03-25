@@ -2,7 +2,7 @@
 cd /home/josue/sciplot
 
 echo "Pulling latest changes..."
-git pull origin main || { echo "Git pull failed"; exit 1; }
+git fetch && git pull origin main || { echo "Git pull failed"; exit 1; }
 
 echo "Building Docker image..."
 docker build -t sciplot . || { echo "Docker build failed"; exit 1; }
@@ -29,7 +29,7 @@ if [ $START_STATUS -ne 0 ]; then
 fi
 
 # If the new container starts successfully, stop the old one
-# echo "Stopping old container..."
-# docker stop sciplot && docker rm sciplot
+echo "Stopping old container..."
+docker stop sciplot # && docker rm sciplot
 
 echo "Deployment successful! The new container is now running."
