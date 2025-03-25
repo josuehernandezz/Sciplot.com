@@ -22,6 +22,7 @@ def webhook():
     try:
         # Retrieve the signature from the headers
         signature = request.headers.get('X-Hub-Signature-256')
+        print(signature)
         if not signature:
             return jsonify({"error": "Missing signature"}), 400
 
