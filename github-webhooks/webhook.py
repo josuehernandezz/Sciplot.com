@@ -6,22 +6,9 @@ import hashlib
 
 app = Flask(__name__)
 
+repository_name = 'Sciplot.com'
+script_path = "/home/josue/sciplot/github-webhooks/deploy.sh"
 GITHUB_SECRET = 'your-github-webhook-secret'  # The secret you set in GitHub
-
-# def verify_signature(payload_body, signature_header, secret_token):
-#     """Verify the GitHub webhook signature to ensure it's from GitHub."""
-#     if not signature_header:
-#         raise ValueError("Signature header is missing!")
-
-#     # Create the expected signature using HMAC and SHA256
-#     hash_object = hmac.new(secret_token.encode('utf-8'), msg=payload_body, digestmod=hashlib.sha256)
-#     expected_signature = "sha256=" + hash_object.hexdigest()
-
-#     # Compare the computed signature with the received signature
-#     if not hmac.compare_digest(expected_signature, signature_header):
-#         raise ValueError("Request signatures didn't match!")
-
-#     return True
 
 def verify_signature(payload_body, signature_header, secret_token):
     """Verify the GitHub webhook signature to ensure it's from GitHub."""
@@ -76,8 +63,8 @@ def webhook():
 
 
         # Check if the push was to the 'main' branch and the correct repository
-        if ref == 'refs/heads/main' and repo_name == 'Sciplot.com':
-            subprocess.run(["/home/josue/github-webhooks/deploy.sh"], check=True)
+        if ref == 'refs/heads/main' and repo_name == repository_name:
+            subprocess.run([script_path], check=True)
             return jsonify({"message": "Deployment triggered"}), 200
 
         return jsonify({"message": "No action taken"}), 400
