@@ -73,7 +73,7 @@ def webhook():
         if not signature:
             return jsonify({"error": "Missing signature"}), 400
 
-        if request.get('ref') == 'refs/heads/main' and payload.get('repository', {}).get('name') == 'sciplot':  
+        if payload.get('ref') == 'refs/heads/main' and payload.get('repository', {}).get('name') == 'sciplot':  
             # Ensure it's the 'main' branch and the correct repository
             subprocess.run(["/home/josue/github-webhooks/deploy.sh"], check=True)
             return jsonify({"message": "Deployment triggered"}), 200
