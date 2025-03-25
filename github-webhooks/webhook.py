@@ -70,6 +70,7 @@ def webhook():
         print(payload)  # Print the full decoded payload
         print(f"ref: {payload.get('ref')}")  # Access specific data, like 'ref'
 
+
         if not signature:
             return jsonify({"error": "Missing signature"}), 400
 
