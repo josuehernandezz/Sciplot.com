@@ -24,3 +24,8 @@ else
 fi
 
 echo "Deployment successful! The new container is now running."
+
+echo "Cleaning up older images"
+
+# docker image prune --all --filter "until=8h" --force
+docker image prune --all --force
