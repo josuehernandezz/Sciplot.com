@@ -3,12 +3,18 @@ import json
 import subprocess
 import hmac
 import hashlib
+from decouple import config
 
 app = Flask(__name__)
 
-repository_name = 'Sciplot.com'
+# Repository name to check for changes from github
+repository_name = "Sciplot.com"
+
+# Path to the script that will be run (ON THE SERVER) for updates
 script_path = "/home/josue/sciplot/github-webhooks/deploy.sh"
-GITHUB_SECRET = 'your-github-webhook-secret'  # The secret you set in GitHub
+
+# A github secret key that is meant to restrict access to running this script
+GITHUB_SECRET = config('GITHUB_SECRET')  # The secret you set in GitHub
 
 def verify_signature(payload_body, signature_header, secret_token):
     """Verify the GitHub webhook signature to ensure it's from GitHub."""
