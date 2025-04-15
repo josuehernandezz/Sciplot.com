@@ -34,6 +34,8 @@ def verify_signature(payload_body, signature_header, secret_token):
 
     # Compare the computed signature with the received signature hash
     if not hmac.compare_digest(expected_signature, signature_hash):
+        print('expected_signature', expected_signature)
+        print('signature_hash', signature_hash)
         raise ValueError("Request signatures didn't match!")
 
     return True
