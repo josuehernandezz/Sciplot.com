@@ -169,8 +169,8 @@ class PLQYForm(forms.Form):
                         )
 
     emi_file = MultiFileField(min_num=0, max_num=10,
-                            label="Emission File",
-                            required=False
+                            label="Emission File (Required but for code but will not be accounted for if neglecting reabsorption correction.)",
+                            required=True
                             )
     
     emi_label = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Emission'}),

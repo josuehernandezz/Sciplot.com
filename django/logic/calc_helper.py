@@ -337,11 +337,11 @@ def nth_integral(x, y, p,
                 type: str = None,
                 ):
     if type == 'Obs_1' or type == 'Blk':
-        x_min = index(x, 448)
+        x_min = index(x, 440)
         x_max = index(x, 460)
     else:
-        x_min = index(x, 467)
-        x_max = index(x, 560)
+        x_min = index(x, 465)
+        x_max = index(x, 570)
 
     x = x[x_min:x_max]
     y = y[x_min:x_max]
