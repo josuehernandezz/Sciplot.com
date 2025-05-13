@@ -169,7 +169,7 @@ class PLQYForm(forms.Form):
                         )
 
     emi_file = MultiFileField(min_num=0, max_num=10,
-                            label="Emission File (Required for code but will not be accounted for if neglecting reabsorption correction)",
+                            label="Emission File (Will not be accounted for if neglecting reabsorption correction)",
                             required=True
                             )
     
