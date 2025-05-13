@@ -169,7 +169,7 @@ class PLQYForm(forms.Form):
                         )
 
     emi_file = MultiFileField(min_num=0, max_num=10,
-                            label="Emission File (Required but for code but will not be accounted for if neglecting reabsorption correction.)",
+                            label="Emission File (Required for code but will not be accounted for if neglecting reabsorption correction)",
                             required=True
                             )
     
@@ -179,7 +179,7 @@ class PLQYForm(forms.Form):
                         )
 
     checkbox = forms.BooleanField(
-        label="Check to neglect reabsorption correction",
+        label="Neglect reabsorption correction",
         required=False,
     )
 
